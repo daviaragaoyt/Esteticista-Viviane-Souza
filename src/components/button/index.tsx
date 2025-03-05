@@ -5,8 +5,8 @@ import {
     TextProps,
     ActivityIndicator,
 } from "react-native";
-import { s } from "./style";
-import { colors } from "@/styles/theme";
+import { s } from "./styles";
+import { colors } from "@/src/styles/theme";
 import { IconProps as TablerIconProps } from "@tabler/icons-react-native";
 
 type ButtonProps = TouchableOpacityProps & {

@@ -3,14 +3,8 @@ import { colors } from "@/src/styles/colors";
 import { fontFamily } from "@/src/styles/font-family";
 
 export const styles = StyleSheet.create({
-    keyboardView: {
-        flex: 1,
-    },
-    container: {
-        flex: 1,
-        padding: 40,
-        gap: 50,
-    },
+
+
     title: {
         fontSize: 28,
         fontFamily: fontFamily.bold,
@@ -24,12 +18,9 @@ export const styles = StyleSheet.create({
         borderRadius: 20,
         height: "50%",
         padding: 20,
-    },
-    header: {
-        alignItems: "center",
         justifyContent: "center",
-        marginBottom: 20,
     },
+
     headerText: {
         fontFamily: fontFamily.bold,
         fontSize: 35,
