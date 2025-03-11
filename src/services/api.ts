@@ -1,6 +1,6 @@
 import axios from "axios";
 
 export const api = axios.create({
-    baseURL: "http://localhost:3333/api",
+    baseURL: "http://192.168.1.5:3333/api", // Substitua pelo IP da sua máquina
     timeout: 7000,
-})
+});

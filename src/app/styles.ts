@@ -6,7 +6,7 @@ export const styles = StyleSheet.create({
 
 
     title: {
-        fontSize: 28,
+        fontSize: 32,
         fontFamily: fontFamily.bold,
     },
     subtitle: {

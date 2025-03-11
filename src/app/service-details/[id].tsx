@@ -1,8 +1,19 @@
-import { View, Text, Image, TouchableOpacity, StyleSheet, Dimensions, Alert } from "react-native";
+import { View, Text, Image, TouchableOpacity, StyleSheet, Alert, FlatList } from "react-native";
 import { useLocalSearchParams, useRouter } from "expo-router";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { fontFamily, colors } from "@/src/styles/theme";
 import { IconArrowLeft } from "@tabler/icons-react-native";
+import { api } from "@/src/services/api";
+import moment from "moment";
+
+// Atualizando a interface para utilizar o campo "foto"
+interface Servico {
+    id: number;
+    nome: string;
+    descricao: string;
+    preco: number;
+    imagem: string;
+}
 
 const availability: Record<string, string[]> = {
     Segunda: ["09:00", "10:00", "11:00", "14:00", "15:00", "16:00"],
@@ -15,18 +26,75 @@ const availability: Record<string, string[]> = {
 
 export default function ServiceDetails() {
     const router = useRouter();
-    const { id, title, description, price, image } = useLocalSearchParams();
+    const { id } = useLocalSearchParams();
+    const [servico, setServico] = useState<Servico | null>(null);
     const [selectedDay, setSelectedDay] = useState<string | null>(null);
     const [selectedTime, setSelectedTime] = useState<string | null>(null);
+    const [isLoading, setIsLoading] = useState(false);
 
+    const fetchServico = async () => {
+        setIsLoading(true);
+        try {
+            const response = await api.get(`/servico/${id}`);
+            if (response.status === 200) {
+                setServico(response.data.data);
+            }
+        } catch (error) {
+            Alert.alert("Erro", "Não foi possível carregar os detalhes do serviço.");
+            console.error(error);
+        } finally {
+            setIsLoading(false);
+        }
+    };
 
-    const handleConfirm = () => {
+    useEffect(() => {
+        fetchServico();
+    }, [id]);
+
+    const handleConfirm = async () => {
         if (selectedDay && selectedTime) {
-            Alert.alert("Agendamento Confirmado", `Serviço: ${title}\nDia: ${selectedDay}\nHorário: ${selectedTime}`);
+            try {
+                const dataHora = moment().set({
+                    hour: parseInt(selectedTime.split(':')[0]),
+                    minute: parseInt(selectedTime.split(':')[1]),
+                    second: 0,
+                }).format('DD/MM/YYYY:HH:mm');
+
+                const agendamentoData = {
+                    dataHora,
+                    clienteId: 1, // Substitua pelo ID do cliente logado
+                    servicoId: parseInt(id as string),
+                };
+
+                const response = await api.post('/agendamento', agendamentoData);
+                if (response.status === 201) {
+                    Alert.alert("Sucesso", "Agendamento confirmado com sucesso!");
+                    router.back();
+                }
+            } catch (error) {
+                Alert.alert("Erro", "Não foi possível confirmar o agendamento.");
+                console.error(error);
+            }
         } else {
             Alert.alert("Erro", "Por favor, selecione um dia e um horário.");
         }
     };
+
+    if (isLoading) {
+        return (
+            <View style={styles.container}>
+                <Text style={styles.loadingText}>Carregando...</Text>
+            </View>
+        );
+    }
+
+    if (!servico) {
+        return (
+            <View style={styles.container}>
+                <Text style={styles.errorText}>Serviço não encontrado.</Text>
+            </View>
+        );
+    }
 
     return (
         <View style={styles.container}>
@@ -34,12 +102,15 @@ export default function ServiceDetails() {
                 <IconArrowLeft color={colors.gray[100]} />
             </TouchableOpacity>
 
-            <Image src="https://github.com/daviaragaoyt.png" style={styles.serviceImage} />
+            <Image
+                source={{ uri: `data:image/jpeg;base64,${servico.imagem}` }}
+                style={styles.serviceImage}
+            />
 
             <View style={styles.detailsContainer}>
-                <Text style={styles.title}>Massagem</Text>
-                <Text style={styles.description}>Seilaaaaaa</Text>
-                <Text style={styles.price}>{`R$ ${price}`}</Text>
+                <Text style={styles.title}>{servico.nome}</Text>
+                <Text style={styles.description}>{servico.descricao}</Text>
+                <Text style={styles.price}>{`R$ ${servico.preco.toFixed(2)}`}</Text>
             </View>
 
             <View style={styles.availabilityContainer}>
@@ -112,7 +183,7 @@ const styles = StyleSheet.create({
         gap: 10,
         padding: 30,
         width: "90%",
-        marginTop: 280
+        marginTop: 280,
     },
     title: {
         fontFamily: fontFamily.bold,
@@ -192,5 +263,15 @@ const styles = StyleSheet.create({
         fontFamily: fontFamily.bold,
         fontSize: 18,
         color: "white",
+    },
+    loadingText: {
+        fontFamily: fontFamily.regular,
+        fontSize: 16,
+        color: colors.gray[600],
+    },
+    errorText: {
+        fontFamily: fontFamily.regular,
+        fontSize: 16,
+        color: colors.gray[600],
     },
 });

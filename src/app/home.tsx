@@ -1,132 +1,85 @@
-import { useEffect, useState } from "react";
-import { View, Alert, Text, Image, TouchableOpacity } from "react-native";
-import * as Location from "expo-location";
-
+// app/client/home.tsx
+import React, { useEffect, useState } from "react";
+import { View, Text, FlatList, TouchableOpacity, StyleSheet, Image, Alert } from "react-native";
+import { useRouter } from "expo-router";
+import { api } from "@/src/services/api";
 import { fontFamily, colors } from "@/src/styles/theme";
-import { api } from "../services/api";
-import { ScrollView } from "react-native-gesture-handler";
-import { router, useRouter } from "expo-router";
 
-const currentLocation = {
-  latitude: -16.00599734669998,
-  longitude: -48.00048220982849,
-};
+interface Servico {
+  id: number;
+  nome: string;
+  descricao: string;
+  preco: number;
+  duracao: number;
+  imagem: string;
+}
 
-export default function Home() {
+export default function ClientHome() {
+  const router = useRouter();
+  const [servicos, setServicos] = useState<Servico[]>([]);
+  const [isLoading, setIsLoading] = useState(false);
 
-  const [category, setCategory] = useState("");
-  const [services, setServices] = useState([]);
-  const [location, setLocation] = useState(currentLocation);
-
-
-  async function fetchServices() {
+  const fetchServices = async () => {
+    setIsLoading(true);
     try {
-      if (!category) return;
-      const { data } = await api.get("/servico");
-      setServices(data);
-    } catch (error) {
-      Alert.alert("Erro", "Não foi possível carregar os serviços.");
-    }
-  }
-
-  async function getCurrentLocation() {
-    try {
-      const { granted } = await Location.requestForegroundPermissionsAsync();
-      if (granted) {
-        const location = await Location.getCurrentPositionAsync();
-        setLocation({
-          latitude: location.coords.latitude,
-          longitude: location.coords.longitude,
-        });
+      const response = await api.get("/servico");
+      if (response.status === 200) {
+        setServicos(response.data.data);
       }
     } catch (error) {
-      console.log(error);
+      Alert.alert("Erro", "Não foi possível carregar os serviços.");
+    } finally {
+      setIsLoading(false);
     }
-  }
-
-  useEffect(() => {
-    // fetchCategories();
-    getCurrentLocation();
-  }, []);
+  };
 
   useEffect(() => {
     fetchServices();
-  }, [category]);
+  }, []);
 
-  const router = useRouter();
+  const renderItem = ({ item }: { item: Servico }) => (
+    <TouchableOpacity
+      style={styles.itemContainer}
+      onPress={() => router.push(`/client/service-details/${item.id}` as any)}
+    >
+      {item.imagem ? (
+        <Image source={{ uri: `data:image/jpeg;base64,${item.imagem}` }} style={styles.itemImage} />
+      ) : null}
+      <View style={styles.itemContent}>
+        <Text style={styles.itemTitle}>{item.nome}</Text>
+        <Text style={styles.itemDescription}>{item.descricao}</Text>
+        <Text style={styles.itemPrice}>{`R$ ${item.preco.toFixed(2)}`}</Text>
+      </View>
+    </TouchableOpacity>
+  );
 
   return (
-    <View
-      style={{
-        flex: 1,
-        backgroundColor: "#CECECE",
-        justifyContent: "center",
-        alignItems: "center",
-        padding: 10,
-      }}
-    >
-      <Text style={{ fontFamily: fontFamily.bold, fontSize: 20 }}>
-        Esteticista Viviane Souza
-      </Text>
-      <Text style={{ fontFamily: fontFamily.bold, fontSize: 14 }}>
-        Marque seu horario com a melhor Esticista da região
-      </Text>
-      <ScrollView
-        style={{ flex: 1, width: "100%", height: "80%", marginTop: 20 }}
-      >
-        <View
-          style={{
-            flex: 1,
-            width: "100%",
-            height: "80%",
-            gap: 5,
-            justifyContent: "center",
-            alignItems: "center",
-          }}
-        >
-          {[1, 2, 3, 4, 5, 1, 2, 3, 4, 5, 1, 2, 3, 4, 5].map((_, index) => (
-            <TouchableOpacity
-              key={index}
-              style={{
-                flexDirection: "row",
-                width: "95%",
-                height: 100,
-                borderRadius: 10,
-                padding: 8,
-                backgroundColor: colors.purple[100],
-                justifyContent: "center",
-                gap: 10,
-              }}
-              onPress={() => router.push({
-                pathname: "/service-details/service-details",
-                params: {
-
-                },
-              })}
-            >
-              <Image
-                src="https://github.com/daviaragaoyt.png"
-                width={30}
-                height={30}
-                style={{
-                  alignSelf: "center",
-                  width: 60,
-                  height: 60,
-                  borderRadius: 10,
-                }}
-              />
-              <View
-                style={{
-                  justifyContent: "center",
-                }}
-              >
-                <Text style={{ fontWeight: "bold" }}>{`Serviço ${index}`}</Text>
-                <Text>{`Descrição do serviço`}</Text>
-              </View>
-            </TouchableOpacity>
-          ))}
-        </View>
-      </ScrollView>
+    <View style={styles.container}>
+      <Text style={styles.header}>Serviços Disponíveis</Text>
+      {isLoading ? (
+        <Text style={styles.loadingText}>Carregando...</Text>
+      ) : (
+        <FlatList data={servicos} keyExtractor={(item) => item.id.toString()} renderItem={renderItem} />
+      )}
     </View>
   );
 }
+
+const styles = StyleSheet.create({
+  container: { flex: 1, padding: 16, backgroundColor: "#fff" },
+  header: { fontFamily: fontFamily.bold, fontSize: 24, marginBottom: 16, color: colors.purple[100] },
+  loadingText: { fontFamily: fontFamily.regular, textAlign: "center" },
+  itemContainer: {
+    backgroundColor: "#f5f5f5",
+    borderRadius: 8,
+    padding: 12,
+    marginBottom: 12,
+    flexDirection: "row",
+    alignItems: "center",
+  },
+  itemImage: { width: 60, height: 60, borderRadius: 8, marginRight: 8 },
+  itemContent: { flex: 1 },
+  itemTitle: { fontFamily: fontFamily.bold, fontSize: 18, color: colors.purple[100] },
+  itemDescription: { fontFamily: fontFamily.regular, fontSize: 14, color: "#666" },
+  itemPrice: { fontFamily: fontFamily.bold, fontSize: 16, color: colors.purple[100] },
+});
