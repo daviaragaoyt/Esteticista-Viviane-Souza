@@ -1,11 +1,11 @@
 // components/Register.tsx
-import { useState } from "react";
-import { View, Text, TextInput, TouchableOpacity, Alert } from "react-native";
 import { Button } from "@/src/app/components/button";
-import { router } from "expo-router";
+import { api } from "@/src/services/api";
 import { colors } from "@/src/styles/colors";
 import { fontFamily } from "@/src/styles/font-family";
-import { api } from "@/src/services/api";
+import { router } from "expo-router";
+import { useState } from "react";
+import { Text, TextInput, ToastAndroid, View } from "react-native";
 
 export default function Register() {
     const [nome, setNome] = useState("");
@@ -17,7 +17,7 @@ export default function Register() {
 
     const handleRegister = async () => {
         if (!nome || !email || !password || !dataNascimento) {
-            Alert.alert("Erro", "Preencha todos os campos obrigatórios!");
+            ToastAndroid.show("Preencha todos os campos obrigatórios!", 2000);
             return;
         }
 
@@ -33,11 +33,11 @@ export default function Register() {
             });
 
             if (response.status === 201) {
-                Alert.alert("Sucesso", "Cadastro realizado com sucesso!");
-                router.push('/home'); // Redireciona para a tela de login
+                ToastAndroid.show("Cadastro realizado com sucesso!", 2000);
+                router.push('/'); // Redireciona para a tela de login
             }
         } catch (error) {
-            Alert.alert("Erro", "Não foi possível realizar o cadastro.");
+            ToastAndroid.show("Não foi possível realizar o cadastro.", 2000);
             console.error(error);
         }
     };
@@ -132,13 +132,11 @@ export default function Register() {
                     onChangeText={setEndereco}
                 />
             </View>
-
+            <Text onPress={() => router.push('/')} style={{ color: colors.purple[100], fontSize: 20, fontFamily: fontFamily.bold }}>
+                Já possui conta? Entre já
+            </Text>
             <Button style={{ width: 280, marginTop: 20 }} onPress={handleRegister}>
                 <Text style={{ color: colors.gray[100], fontSize: 18, fontFamily: fontFamily.bold }}>Cadastrar</Text>
-            </Button>
-
-            <Button style={{ width: 280, marginTop: 10 }} onPress={() => router.push('../components/login')}>
-                <Text style={{ color: colors.gray[100], fontSize: 20, fontFamily: fontFamily.bold }}>Voltar para Login</Text>
             </Button>
         </View>
     );

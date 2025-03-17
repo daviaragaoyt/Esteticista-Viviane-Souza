@@ -1,9 +1,9 @@
 // app/provider/appointments.tsx
-import React, { useState, useEffect } from "react";
-import { View, Text, FlatList, TouchableOpacity, StyleSheet, Alert } from "react-native";
-import { useRouter } from "expo-router";
 import { api } from "@/src/services/api";
-import { fontFamily, colors } from "@/src/styles/theme";
+import { colors, fontFamily } from "@/src/styles/theme";
+import { useRouter } from "expo-router";
+import React, { useEffect, useState } from "react";
+import { FlatList, StyleSheet, Text, ToastAndroid, TouchableOpacity, View } from "react-native";
 
 interface Agendamento {
     id: number;
@@ -26,7 +26,7 @@ export default function ProviderAppointments() {
                 setAgendamentos(response.data.data);
             }
         } catch (error) {
-            Alert.alert("Erro", "Não foi possível carregar os agendamentos.");
+            ToastAndroid.show("Não foi possível carregar os agendamentos.", 2000);
         } finally {
             setIsLoading(false);
         }
@@ -40,11 +40,11 @@ export default function ProviderAppointments() {
         try {
             const response = await api.delete(`/agendamento/${id}`);
             if (response.status === 200) {
-                Alert.alert("Sucesso", "Agendamento cancelado.");
+                ToastAndroid.show("Sucesso", 2000);
                 fetchAppointments();
             }
         } catch (error) {
-            Alert.alert("Erro", "Não foi possível cancelar o agendamento.");
+            ToastAndroid.show("Não foi possível cancelar o agendamento.", 2000);
         }
     };
 

@@ -1,15 +1,13 @@
 import { Stack } from "expo-router";
-import { colors } from "@/src/styles/theme";
-import { GestureHandlerRootView } from "react-native-gesture-handler";
+import { StatusBar } from "react-native";
 
 import {
-  useFonts,
-  Rubik_600SemiBold,
   Rubik_400Regular,
   Rubik_500Medium,
+  Rubik_600SemiBold,
   Rubik_700Bold,
+  useFonts,
 } from "@expo-google-fonts/rubik";
-import { StatusBar } from "react-native";
 
 export default function Layout() {
   const [fontsLoaded] = useFonts({
@@ -21,14 +19,13 @@ export default function Layout() {
 
 
   return (
-    <GestureHandlerRootView style={{ flex: 1 }}>
+
+    <Stack >
       <StatusBar barStyle={"light-content"} />
-      <Stack
-        screenOptions={{
-          headerShown: false,
-          contentStyle: { backgroundColor: colors.gray[100] },
-        }}
-      />
-    </GestureHandlerRootView>
+      <Stack.Screen name="index" options={{ headerShown: false }} />
+      <Stack.Screen name="home" options={{ headerShown: false }} />
+      <Stack.Screen name="cadastro" options={{ headerShown: false }} />
+    </Stack>
+
   );
 }

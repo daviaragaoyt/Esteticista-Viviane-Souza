@@ -1,9 +1,9 @@
 // app/provider/new-service.tsx ou app/provider/edit-service/[id].tsx
-import React, { useState, useEffect } from "react";
-import { View, Text, TextInput, TouchableOpacity, StyleSheet, Alert, Image } from "react-native";
-import { useRouter, useLocalSearchParams } from "expo-router";
 import { api } from "@/src/services/api";
-import { fontFamily, colors } from "@/src/styles/theme";
+import { colors, fontFamily } from "@/src/styles/theme";
+import { useLocalSearchParams, useRouter } from "expo-router";
+import React, { useEffect, useState } from "react";
+import { Image, StyleSheet, Text, TextInput, ToastAndroid, TouchableOpacity, View } from "react-native";
 
 interface Servico {
     id?: number;
@@ -43,7 +43,7 @@ export default function ProviderServiceForm() {
                         setImagem(servico.imagem || "");
                     }
                 } catch (error) {
-                    Alert.alert("Erro", "Não foi possível carregar os dados do serviço.");
+                    ToastAndroid.show("Não foi possível carregar os dados do serviço.", 2000);
                 }
             };
             fetchService();
@@ -52,7 +52,7 @@ export default function ProviderServiceForm() {
 
     const handleSubmit = async () => {
         if (!nome || !preco || !duracao) {
-            Alert.alert("Erro", "Preencha os campos obrigatórios: nome, preço e duração.");
+            ToastAndroid.show("Preencha os campos obrigatórios: nome, preço e duração.", 2000);
             return;
         }
         const serviceData = {
@@ -67,18 +67,18 @@ export default function ProviderServiceForm() {
             if (isEditMode) {
                 const response = await api.put(`/servico/${params.id}`, serviceData);
                 if (response.status === 200) {
-                    Alert.alert("Sucesso", "Serviço atualizado com sucesso.");
+                    ToastAndroid.show("Sucesso", 2000);
                     router.push("/provider/dashboard");
                 }
             } else {
                 const response = await api.post("/servico", serviceData);
                 if (response.status === 201) {
-                    Alert.alert("Sucesso", "Serviço criado com sucesso.");
+                    ToastAndroid.show("Sucesso", 2000);
                     router.push("/provider/dashboard");
                 }
             }
         } catch (error) {
-            Alert.alert("Erro", "Ocorreu um erro ao salvar o serviço.");
+            ToastAndroid.show("Ocorreu um erro ao salvar o serviço.", 2000);
         }
     };
 

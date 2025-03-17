@@ -1,9 +1,9 @@
 // app/provider/dashboard.tsx
-import React, { useEffect, useState } from "react";
-import { View, Text, FlatList, TouchableOpacity, StyleSheet, Alert, Image } from "react-native";
-import { useRouter } from "expo-router";
 import { api } from "@/src/services/api";
-import { fontFamily, colors } from "@/src/styles/theme";
+import { colors, fontFamily } from "@/src/styles/theme";
+import { useRouter } from "expo-router";
+import React, { useEffect, useState } from "react";
+import { FlatList, Image, StyleSheet, Text, ToastAndroid, TouchableOpacity, View } from "react-native";
 
 interface Servico {
     id: number;
@@ -40,7 +40,7 @@ export default function ProviderDashboard() {
                 setServicos(myServices);
             }
         } catch (error) {
-            Alert.alert("Erro", "Não foi possível carregar os serviços.");
+            ToastAndroid.show("Não foi possível carregar os serviços.", 2000);
         } finally {
             setIsLoading(false);
         }
@@ -54,11 +54,11 @@ export default function ProviderDashboard() {
         try {
             const response = await api.delete(`/servico/${id}`);
             if (response.status === 200) {
-                Alert.alert("Sucesso", "Serviço deletado com sucesso.");
+                ToastAndroid.show("Sucesso", 2000);
                 fetchServices();
             }
         } catch (error) {
-            Alert.alert("Erro", "Não foi possível deletar o serviço.");
+            ToastAndroid.show("Não foi possível deletar o serviço.", 2000);
         }
     };
 

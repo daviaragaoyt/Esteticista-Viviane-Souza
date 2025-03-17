@@ -1,9 +1,9 @@
 // app/client/home.tsx
-import React, { useEffect, useState } from "react";
-import { View, Text, FlatList, TouchableOpacity, StyleSheet, Image, Alert } from "react-native";
-import { useRouter } from "expo-router";
 import { api } from "@/src/services/api";
-import { fontFamily, colors } from "@/src/styles/theme";
+import { colors, fontFamily } from "@/src/styles/theme";
+import { useRouter } from "expo-router";
+import React, { useEffect, useState } from "react";
+import { FlatList, Image, StyleSheet, Text, ToastAndroid, TouchableOpacity, View } from "react-native";
 
 interface Servico {
   id: number;
@@ -27,7 +27,7 @@ export default function ClientHome() {
         setServicos(response.data.data);
       }
     } catch (error) {
-      Alert.alert("Erro", "Não foi possível carregar os serviços.");
+      ToastAndroid.show("Não foi possível carregar os serviços.", 2000);
     } finally {
       setIsLoading(false);
     }
@@ -40,7 +40,7 @@ export default function ClientHome() {
   const renderItem = ({ item }: { item: Servico }) => (
     <TouchableOpacity
       style={styles.itemContainer}
-      onPress={() => router.push(`/client/service-details/${item.id}` as any)}
+      onPress={() => router.push(`/service-details/${item.id}` as any)}
     >
       {item.imagem ? (
         <Image source={{ uri: `data:image/jpeg;base64,${item.imagem}` }} style={styles.itemImage} />

@@ -1,10 +1,10 @@
-import { View, Text, Image, TouchableOpacity, StyleSheet, Alert, FlatList } from "react-native";
-import { useLocalSearchParams, useRouter } from "expo-router";
-import { useState, useEffect } from "react";
-import { fontFamily, colors } from "@/src/styles/theme";
-import { IconArrowLeft } from "@tabler/icons-react-native";
 import { api } from "@/src/services/api";
+import { colors, fontFamily } from "@/src/styles/theme";
+import { IconArrowLeft } from "@tabler/icons-react-native";
+import { useLocalSearchParams, useRouter } from "expo-router";
 import moment from "moment";
+import { useEffect, useState } from "react";
+import { Image, StyleSheet, Text, ToastAndroid, TouchableOpacity, View } from "react-native";
 
 // Atualizando a interface para utilizar o campo "foto"
 interface Servico {
@@ -40,7 +40,7 @@ export default function ServiceDetails() {
                 setServico(response.data.data);
             }
         } catch (error) {
-            Alert.alert("Erro", "Não foi possível carregar os detalhes do serviço.");
+            ToastAndroid.show("Não foi possível carregar os detalhes do serviço.", 2000);
             console.error(error);
         } finally {
             setIsLoading(false);
@@ -68,15 +68,15 @@ export default function ServiceDetails() {
 
                 const response = await api.post('/agendamento', agendamentoData);
                 if (response.status === 201) {
-                    Alert.alert("Sucesso", "Agendamento confirmado com sucesso!");
+                    ToastAndroid.show("Sucesso", 2000);
                     router.back();
                 }
             } catch (error) {
-                Alert.alert("Erro", "Não foi possível confirmar o agendamento.");
+                ToastAndroid.show("Não foi possível confirmar o agendamento.", 2000);
                 console.error(error);
             }
         } else {
-            Alert.alert("Erro", "Por favor, selecione um dia e um horário.");
+            ToastAndroid.show("Por favor, selecione um dia e um horári,2000o.", 2000);
         }
     };
 
