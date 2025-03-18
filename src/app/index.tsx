@@ -6,7 +6,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { AxiosError } from "axios"; // Importe AxiosError para tipar o erro
 import { router } from "expo-router";
 import { useState } from "react";
-import { Text, TextInput, ToastAndroid, View } from "react-native";
+import { Text, TextInput, ToastAndroid, View, Image } from "react-native";
 
 export default function Login() {
     const [email, setEmail] = useState("");
@@ -35,7 +35,7 @@ export default function Login() {
                 await AsyncStorage.setItem('refreshToken', refreshToken);
 
                 ToastAndroid.show(`Login efetuado para: ${email}`, 2000);
-                router.push('/home'); // Redireciona para a tela inicial
+                router.replace('/provider/new-service'); // Redireciona para a tela inicial
             }
         } catch (error) {
             // Tipagem do erro
@@ -68,11 +68,11 @@ export default function Login() {
 
     return (
         <View style={{ flex: 1, justifyContent: "center", alignItems: "center", gap: 20 }}>
-            <Text style={{ fontFamily: fontFamily.bold, fontSize: 24, color: colors.purple[100] }}>
-                Estiticista Viviane Souza
+            <Text style={{ fontFamily: fontFamily.bold, fontSize: 32, color: colors.purple[100] }}>
+                Esteticista Viviane Souza
             </Text>
-            <Text style={{ fontFamily: fontFamily.regular, fontSize: 16, color: colors.gray[600] }}>
-                Faça login ou crie sua conta aqui
+            <Text style={{ fontFamily: fontFamily.medium, fontSize: 18, color: colors.gray[600] }}>
+                Acesse sua conta !
             </Text>
 
             <View style={{ width: "90%", gap: 10, backgroundColor: colors.purple[100], borderRadius: 8, padding: 32 }}>
@@ -114,7 +114,7 @@ export default function Login() {
             </Text>
             <Button style={{ width: 280, marginTop: 20 }} onPress={handleLogin} disabled={isLoading}>
                 <Text style={{ color: colors.gray[100], fontSize: 20, fontFamily: fontFamily.bold }}>
-                    {isLoading ? "Carregando..." : " Entrar "}
+                    {isLoading ? "Carregando..." : "Entrar"}
                 </Text>
             </Button>
 

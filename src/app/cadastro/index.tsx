@@ -29,7 +29,7 @@ export default function Register() {
                 dataNascimento,
                 telefone,
                 endereco,
-                role: 'CLIENTE', // Define a role padrão como CLIENTE
+
             });
 
             if (response.status === 201) {
