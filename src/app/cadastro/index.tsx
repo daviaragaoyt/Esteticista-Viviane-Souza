@@ -20,7 +20,6 @@ export default function Register() {
             ToastAndroid.show("Preencha todos os campos obrigatórios!", 2000);
             return;
         }
-
         try {
             const response = await api.post('/pessoa', {
                 nome,
@@ -29,12 +28,11 @@ export default function Register() {
                 dataNascimento,
                 telefone,
                 endereco,
-
             });
 
             if (response.status === 201) {
                 ToastAndroid.show("Cadastro realizado com sucesso!", 2000);
-                router.push('/'); // Redireciona para a tela de login
+                router.push('/home'); // Redireciona para a tela de login
             }
         } catch (error) {
             ToastAndroid.show("Não foi possível realizar o cadastro.", 2000);

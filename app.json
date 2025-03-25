@@ -8,15 +8,21 @@
     "scheme": "myapp",
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
-    "backgroundColor":"#9871F3",
+    "backgroundColor": "#9871F3",
     "ios": {
       "supportsTablet": true
     },
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./src/assets/logo.png",
-        "backgroundColor": "#9871F3"
-      }
+        "backgroundColor": "#fff",
+        "permissions": [
+          "android.permission.CAMERA",
+          "android.permission.READ_EXTERNAL_STORAGE",
+          "android.permission.WRITE_EXTERNAL_STORAGE"
+        ]
+      },
+      "package": "com.daviaragaoyt.lashapp"
     },
     "web": {
       "bundler": "metro",
@@ -31,12 +37,20 @@
           "image": "./src/assets/logo.png",
           "imageWidth": 200,
           "resizeMode": "contain",
-          "backgroundColor": "#9871F3"
+          "backgroundColor": "#fff"
         }
       ]
     ],
     "experiments": {
       "typedRoutes": true
+    },
+    "extra": {
+      "router": {
+        "origin": false
+      },
+      "eas": {
+        "projectId": "a81739ef-87a6-4829-8dca-b240858f0f5a"
+      }
     }
   }
 }

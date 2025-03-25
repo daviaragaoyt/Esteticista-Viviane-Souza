@@ -6,7 +6,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { AxiosError } from "axios"; // Importe AxiosError para tipar o erro
 import { router } from "expo-router";
 import { useState } from "react";
-import { Text, TextInput, ToastAndroid, View, Image } from "react-native";
+import { Text, TextInput, ToastAndroid, View } from "react-native";
 
 export default function Login() {
     const [email, setEmail] = useState("");
@@ -28,24 +28,31 @@ export default function Login() {
             });
 
             if (response.status === 200) {
-                const { accessToken, refreshToken } = response.data.data;
+                const { accessToken, refreshToken, user } = response.data.data;
 
-                // Armazena os tokens no AsyncStorage
+                // Armazena os tokens e o role no AsyncStorage
                 await AsyncStorage.setItem('accessToken', accessToken);
                 await AsyncStorage.setItem('refreshToken', refreshToken);
+                await AsyncStorage.setItem('Role', user.role);
 
                 ToastAndroid.show(`Login efetuado para: ${email}`, 2000);
-                router.replace('/provider/new-service'); // Redireciona para a tela inicial
+
+                // Redireciona com base no role
+                if (user.role === "CLIENTE") {
+                    router.replace('/home'); // Tela do cliente
+                } else if (user.role === "PRESTADOR") {
+                    router.replace('/provider'); // Tela do prestador
+                } else {
+                    ToastAndroid.show("Tipo de usuário desconhecido.", 2000);
+                }
             }
         } catch (error) {
-            // Tipagem do erro
             const axiosError = error as AxiosError<{
                 message?: string;
                 status?: string;
             }>;
 
             if (axiosError.response) {
-                // Erro retornado pelo backend
                 if (axiosError.response.status === 404) {
                     ToastAndroid.show("Usuário não encontrado.", 2000);
                 } else if (axiosError.response.status === 401) {
@@ -54,10 +61,8 @@ export default function Login() {
                     ToastAndroid.show("Ocorreu um erro ao fazer login.", 2000);
                 }
             } else if (axiosError.request) {
-                // Erro de rede (requisição não chegou ao backend)
                 ToastAndroid.show("Sem resposta do servidor. Verifique sua conexão.", 2000);
             } else {
-                // Outros erros
                 ToastAndroid.show("Ocorreu um erro inesperado.", 2000);
             }
             console.error(axiosError);
@@ -71,7 +76,7 @@ export default function Login() {
             <Text style={{ fontFamily: fontFamily.bold, fontSize: 32, color: colors.purple[100] }}>
                 Esteticista Viviane Souza
             </Text>
-            <Text style={{ fontFamily: fontFamily.medium, fontSize: 18, color: colors.gray[600] }}>
+            <Text style={{ fontFamily: fontFamily.medium, fontSize: 18, color: colors.purple[100] }}>
                 Acesse sua conta !
             </Text>
 
@@ -105,9 +110,6 @@ export default function Login() {
                     onChangeText={setPassword}
                     secureTextEntry
                 />
-
-
-
             </View>
             <Text onPress={() => router.push('/cadastro')} style={{ color: colors.purple[100], fontSize: 20, fontFamily: fontFamily.bold }}>
                 Não possui conta? Crie já
@@ -117,7 +119,6 @@ export default function Login() {
                     {isLoading ? "Carregando..." : "Entrar"}
                 </Text>
             </Button>
-
         </View>
     );
 }

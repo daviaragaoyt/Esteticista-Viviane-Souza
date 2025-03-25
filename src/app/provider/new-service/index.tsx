@@ -1,9 +1,10 @@
-// app/provider/new-service.tsx ou app/provider/edit-service/[id].tsx
 import { api } from "@/src/services/api";
 import { colors, fontFamily } from "@/src/styles/theme";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import React, { useEffect, useState } from "react";
-import { Image, StyleSheet, Text, TextInput, ToastAndroid, TouchableOpacity, View } from "react-native";
+import { Image, StyleSheet, Text, TextInput, ToastAndroid, View } from "react-native";
+import { Button } from '../../components/button';
+import { TabBar } from "../../components/tabbar";
 
 interface Servico {
     id?: number;
@@ -26,7 +27,6 @@ export default function ProviderServiceForm() {
     const [duracao, setDuracao] = useState("");
     const [imagem, setImagem] = useState("");
 
-    // Supondo que o prestador autenticado tenha id 1
     const prestadorId = 1;
 
     useEffect(() => {
@@ -49,6 +49,9 @@ export default function ProviderServiceForm() {
             fetchService();
         }
     }, [isEditMode, params.id]);
+
+
+
 
     const handleSubmit = async () => {
         if (!nome || !preco || !duracao) {
@@ -95,13 +98,16 @@ export default function ProviderServiceForm() {
                 style={styles.input}
                 keyboardType="numeric"
             />
-            <TextInput placeholder="Imagem (base64)" value={imagem} onChangeText={setImagem} style={styles.input} />
+            <Button>
+                <Text style={styles.submitButtonText}>Escolha uma imagem</Text>
+            </Button>
             {imagem ? (
                 <Image source={{ uri: `data:image/jpeg;base64,${imagem}` }} style={styles.previewImage} />
             ) : null}
-            <TouchableOpacity onPress={handleSubmit} style={styles.submitButton}>
+            <Button onPress={handleSubmit} style={styles.submitButton}>
                 <Text style={styles.submitButtonText}>{isEditMode ? "Atualizar" : "Criar"}</Text>
-            </TouchableOpacity>
+            </Button>
+            <TabBar />
         </View>
     );
 }

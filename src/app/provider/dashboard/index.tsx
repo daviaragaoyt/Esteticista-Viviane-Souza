@@ -4,6 +4,8 @@ import { colors, fontFamily } from "@/src/styles/theme";
 import { useRouter } from "expo-router";
 import React, { useEffect, useState } from "react";
 import { FlatList, Image, StyleSheet, Text, ToastAndroid, TouchableOpacity, View } from "react-native";
+import { TabBar } from "../../components/tabbar";
+import { FloatingActionButton } from "../../components/floatinActionButton";
 
 interface Servico {
     id: number;
@@ -89,14 +91,16 @@ export default function ProviderDashboard() {
     return (
         <View style={styles.container}>
             <Text style={styles.header}>Meus Serviços</Text>
-            <TouchableOpacity onPress={() => router.push("/provider/new-service")} style={styles.addButton}>
+            {/* <TouchableOpacity onPress={() => router.push("/provider/new-service")} style={styles.addButton}>
                 <Text style={styles.addButtonText}>+ Novo Serviço</Text>
-            </TouchableOpacity>
+            </TouchableOpacity> */}
             {isLoading ? (
                 <Text style={styles.loadingText}>Carregando...</Text>
             ) : (
                 <FlatList data={servicos} keyExtractor={(item) => item.id.toString()} renderItem={renderItem} />
             )}
+            <TabBar />
+            <FloatingActionButton />
         </View>
     );
 }

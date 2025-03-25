@@ -63,20 +63,22 @@ export default function ServiceDetails() {
                 const agendamentoData = {
                     dataHora,
                     clienteId: 1, // Substitua pelo ID do cliente logado
-                    servicoId: parseInt(id as string),
+                    servicoId: id,
                 };
 
                 const response = await api.post('/agendamento', agendamentoData);
                 if (response.status === 201) {
                     ToastAndroid.show("Sucesso", 2000);
-                    router.back();
+                    router.push("/loading");
+
                 }
             } catch (error) {
                 ToastAndroid.show("Não foi possível confirmar o agendamento.", 2000);
                 console.error(error);
+
             }
         } else {
-            ToastAndroid.show("Por favor, selecione um dia e um horári,2000o.", 2000);
+            ToastAndroid.show("Por favor, selecione um dia e um horário.", 2000);
         }
     };
 
@@ -183,7 +185,7 @@ const styles = StyleSheet.create({
         gap: 10,
         padding: 30,
         width: "90%",
-        marginTop: 280,
+        marginTop: 180,
     },
     title: {
         fontFamily: fontFamily.bold,
