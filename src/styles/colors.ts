@@ -9,7 +9,8 @@ export const colors = {
   },
 
   purple: {
-    100: "#9871F3"
+    100: "#9477fe"
+
   },
   green: {
     soft: "#E9F3EF",
@@ -20,6 +21,6 @@ export const colors = {
 
   red: {
     light: "#FDEDED",
-    base: "#F94144",
+    base: "#900D09",
   },
 }

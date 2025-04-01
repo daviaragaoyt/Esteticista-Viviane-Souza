@@ -1,5 +1,6 @@
 import React, { useState } from "react";
-import { View, Text, Button, Modal, TouchableWithoutFeedback } from "react-native";
+import { View, Text, Modal, TouchableWithoutFeedback } from "react-native";
+import { Button } from "../components/button";
 import MapView, { Marker } from "react-native-maps";
 import styles from "./styles";
 
@@ -13,8 +14,9 @@ const ServicoAgendado = () => {
     return (
         <View style={styles.container}>
             <Text style={styles.title}>Agendamento Confirmado!</Text>
-            <Button title="Ver Localização" onPress={() => setModalVisible(true)} />
-
+            <Button onPress={() => setModalVisible(true)}>
+                <Button.Title>Ver Localização</Button.Title>
+            </Button>
             {/* Modal com Mapa */}
             <Modal visible={modalVisible} animationType="slide" transparent={true}>
                 <TouchableWithoutFeedback onPress={() => setModalVisible(false)}>

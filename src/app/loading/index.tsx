@@ -8,7 +8,7 @@ const LoadingScreen = () => {
 
     useEffect(() => {
         const timer = setTimeout(() => {
-            router.push("/agendado/index"); // Navega para a página após 5s
+            router.push("/agendado"); // Navega para a página após 5s
         }, 5000);
 
         return () => clearTimeout(timer); // Evita bugs se o usuário sair antes dos 5s

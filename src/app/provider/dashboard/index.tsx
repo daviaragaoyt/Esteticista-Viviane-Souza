@@ -1,4 +1,3 @@
-// app/provider/dashboard.tsx
 import { api } from "@/src/services/api";
 import { colors, fontFamily } from "@/src/styles/theme";
 import { useRouter } from "expo-router";
@@ -13,7 +12,7 @@ interface Servico {
     descricao: string;
     preco: number;
     duracao: number;
-    imagem: string;
+    imagem: string | null;
     prestadorId: number;
     prestador: {
         id: number;
@@ -25,16 +24,15 @@ export default function ProviderDashboard() {
     const router = useRouter();
     const [servicos, setServicos] = useState<Servico[]>([]);
     const [isLoading, setIsLoading] = useState(false);
+    const [refreshing, setRefreshing] = useState(false);
 
-    // Supondo que o prestador autenticado tenha id 1 (substitua pelo valor real do seu contexto)
-    const providerId = 1;
+    const providerId = 1; // Substitua pela lógica real de obtenção do ID
 
     const fetchServices = async () => {
         setIsLoading(true);
         try {
             const response = await api.get("/servico");
             if (response.status === 200) {
-                // Filtra somente os serviços do prestador autenticado
                 const allServices: Servico[] = response.data.data;
                 const myServices = allServices.filter(
                     (service) => service.prestador && service.prestador.id === providerId
@@ -43,9 +41,16 @@ export default function ProviderDashboard() {
             }
         } catch (error) {
             ToastAndroid.show("Não foi possível carregar os serviços.", 2000);
+            console.error(error);
         } finally {
             setIsLoading(false);
+            setRefreshing(false);
         }
+    };
+
+    const onRefresh = () => {
+        setRefreshing(true);
+        fetchServices();
     };
 
     useEffect(() => {
@@ -56,23 +61,37 @@ export default function ProviderDashboard() {
         try {
             const response = await api.delete(`/servico/${id}`);
             if (response.status === 200) {
-                ToastAndroid.show("Sucesso", 2000);
+                ToastAndroid.show("Serviço removido com sucesso", 2000);
                 fetchServices();
             }
         } catch (error) {
             ToastAndroid.show("Não foi possível deletar o serviço.", 2000);
+            console.error(error);
         }
     };
 
     const renderItem = ({ item }: { item: Servico }) => (
         <View style={styles.itemContainer}>
             {item.imagem ? (
-                <Image source={{ uri: `data:image/jpeg;base64,${item.imagem}` }} style={styles.itemImage} />
-            ) : null}
+                <Image
+                    source={{ uri: `data:image/jpeg;base64,${item.imagem}` }}
+                    style={styles.itemImage}
+                    resizeMode="cover"
+                />
+            ) : (
+                <View style={[styles.itemImage, styles.noImage]}>
+                    <Text style={styles.noImageText}>Sem imagem</Text>
+                </View>
+            )}
             <View style={styles.itemContent}>
                 <Text style={styles.itemTitle}>{item.nome}</Text>
-                <Text style={styles.itemDescription}>{item.descricao}</Text>
-                <Text style={styles.itemPrice}>{`R$ ${item.preco.toFixed(2)}`}</Text>
+                <Text style={styles.itemDescription} numberOfLines={2}>
+                    {item.descricao || "Sem descrição"}
+                </Text>
+                <View style={styles.itemFooter}>
+                    <Text style={styles.itemPrice}>{`R$ ${item.preco.toFixed(2)}`}</Text>
+                    <Text style={styles.itemDuration}>{`${item.duracao} min`}</Text>
+                </View>
             </View>
             <View style={styles.itemButtons}>
                 <TouchableOpacity
@@ -81,7 +100,10 @@ export default function ProviderDashboard() {
                 >
                     <Text style={styles.buttonText}>Editar</Text>
                 </TouchableOpacity>
-                <TouchableOpacity onPress={() => handleDelete(item.id)} style={styles.deleteButton}>
+                <TouchableOpacity
+                    onPress={() => handleDelete(item.id)}
+                    style={styles.deleteButton}
+                >
                     <Text style={styles.buttonText}>Excluir</Text>
                 </TouchableOpacity>
             </View>
@@ -91,51 +113,134 @@ export default function ProviderDashboard() {
     return (
         <View style={styles.container}>
             <Text style={styles.header}>Meus Serviços</Text>
-            {/* <TouchableOpacity onPress={() => router.push("/provider/new-service")} style={styles.addButton}>
-                <Text style={styles.addButtonText}>+ Novo Serviço</Text>
-            </TouchableOpacity> */}
-            {isLoading ? (
+
+            {isLoading && !refreshing ? (
                 <Text style={styles.loadingText}>Carregando...</Text>
+            ) : servicos.length === 0 ? (
+                <Text style={styles.emptyText}>Nenhum serviço cadastrado</Text>
             ) : (
-                <FlatList data={servicos} keyExtractor={(item) => item.id.toString()} renderItem={renderItem} />
+                <FlatList
+                    data={servicos}
+                    keyExtractor={(item) => item.id.toString()}
+                    renderItem={renderItem}
+                    refreshing={refreshing}
+                    onRefresh={onRefresh}
+                    contentContainerStyle={styles.listContent}
+                />
             )}
+
             <TabBar />
-            <FloatingActionButton />
+            <FloatingActionButton onPress={() => router.push("/provider/new-service")} />
         </View>
     );
 }
 
 const styles = StyleSheet.create({
-    container: { flex: 1, padding: 16, backgroundColor: "#fff" },
+    container: {
+        flex: 1,
+        padding: 16,
+        backgroundColor: "#fff"
+    },
     header: {
         fontFamily: fontFamily.bold,
         fontSize: 24,
         marginBottom: 16,
         color: colors.purple[100],
     },
-    addButton: {
-        backgroundColor: colors.purple[100],
-        padding: 12,
-        borderRadius: 8,
-        marginBottom: 16,
+    listContent: {
+        paddingBottom: 80,
     },
-    addButtonText: { color: "#fff", fontFamily: fontFamily.bold, textAlign: "center" },
-    loadingText: { fontFamily: fontFamily.regular, textAlign: "center" },
+    loadingText: {
+        fontFamily: fontFamily.regular,
+        textAlign: "center",
+        marginTop: 20,
+    },
+    emptyText: {
+        fontFamily: fontFamily.regular,
+        textAlign: "center",
+        marginTop: 20,
+        color: colors.gray[500],
+    },
     itemContainer: {
-        backgroundColor: "#f5f5f5",
-        borderRadius: 8,
+        backgroundColor: "#f9f9f9",
+        borderRadius: 12,
         padding: 12,
         marginBottom: 12,
         flexDirection: "row",
         alignItems: "center",
+        elevation: 2,
+        shadowColor: "#000",
+        shadowOffset: { width: 0, height: 1 },
+        shadowOpacity: 0.1,
+        shadowRadius: 2,
     },
-    itemImage: { width: 60, height: 60, borderRadius: 8, marginRight: 8 },
-    itemContent: { flex: 1 },
-    itemTitle: { fontFamily: fontFamily.bold, fontSize: 18, color: colors.purple[100] },
-    itemDescription: { fontFamily: fontFamily.regular, fontSize: 14, color: "#666" },
-    itemPrice: { fontFamily: fontFamily.bold, fontSize: 16, color: colors.purple[100] },
-    itemButtons: { flexDirection: "column" },
-    editButton: { backgroundColor: "blue", padding: 8, borderRadius: 8, marginBottom: 4 },
-    deleteButton: { backgroundColor: "red", padding: 8, borderRadius: 8 },
-    buttonText: { color: "#fff", fontFamily: fontFamily.bold },
+    itemImage: {
+        width: 80,
+        height: 80,
+        borderRadius: 8,
+        marginRight: 12,
+    },
+    noImage: {
+        backgroundColor: colors.gray[200],
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
+    noImageText: {
+        fontFamily: fontFamily.regular,
+        fontSize: 12,
+        color: colors.gray[500],
+    },
+    itemContent: {
+        flex: 1,
+        justifyContent: 'space-between',
+    },
+    itemTitle: {
+        fontFamily: fontFamily.bold,
+        fontSize: 16,
+        color: colors.purple[100],
+        marginBottom: 4,
+    },
+    itemDescription: {
+        fontFamily: fontFamily.regular,
+        fontSize: 14,
+        color: colors.gray[600],
+        marginBottom: 8,
+    },
+    itemFooter: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+    },
+    itemPrice: {
+        fontFamily: fontFamily.bold,
+        fontSize: 16,
+        color: colors.purple[100],
+    },
+    itemDuration: {
+        fontFamily: fontFamily.regular,
+        fontSize: 14,
+        color: colors.gray[500],
+    },
+    itemButtons: {
+        flexDirection: "column",
+        marginLeft: 8,
+    },
+    editButton: {
+        backgroundColor: colors.purple[100],
+        padding: 8,
+        borderRadius: 6,
+        marginBottom: 6,
+        minWidth: 70,
+    },
+    deleteButton: {
+        backgroundColor: colors.red.base,
+        padding: 8,
+        borderRadius: 6,
+        minWidth: 70,
+    },
+    buttonText: {
+        color: "#fff",
+        fontFamily: fontFamily.medium,
+        fontSize: 14,
+        textAlign: 'center',
+    },
 });

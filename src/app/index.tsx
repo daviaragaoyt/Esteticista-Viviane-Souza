@@ -7,12 +7,13 @@ import { AxiosError } from "axios"; // Importe AxiosError para tipar o erro
 import { router } from "expo-router";
 import { useState } from "react";
 import { Text, TextInput, ToastAndroid, View } from "react-native";
+import { ForgotPasswordModal } from "./components/passwordModal";
 
 export default function Login() {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [isLoading, setIsLoading] = useState(false);
-
+    const [showForgotPasswordModal, setShowForgotPasswordModal] = useState(false);
     const handleLogin = async () => {
         if (!email || !password) {
             ToastAndroid.show("Preencha todos os campos!", 2000);
@@ -27,47 +28,67 @@ export default function Login() {
                 senha: password,
             });
 
-            if (response.status === 200) {
-                const { accessToken, refreshToken, user } = response.data.data;
+            console.log('Resposta da API:', response.data); // Adicione para debug
 
-                // Armazena os tokens e o role no AsyncStorage
-                await AsyncStorage.setItem('accessToken', accessToken);
-                await AsyncStorage.setItem('refreshToken', refreshToken);
-                await AsyncStorage.setItem('Role', user.role);
+            // Verifique a estrutura real da resposta
+            const userData = response.data.data?.pessoa || response.data.pessoa || response.data;
 
-                ToastAndroid.show(`Login efetuado para: ${email}`, 2000);
+            if (!userData) {
+                throw new Error('Estrutura de resposta inesperada');
+            }
 
-                // Redireciona com base no role
-                if (user.role === "CLIENTE") {
-                    router.replace('/home'); // Tela do cliente
-                } else if (user.role === "PRESTADOR") {
-                    router.replace('/provider'); // Tela do prestador
-                } else {
+            // Armazena as informações
+            await AsyncStorage.multiSet([
+                ['userEmail', userData.email],
+                ['userRole', userData.role],
+                ['userId', userData.id.toString()]
+            ]);
+
+            ToastAndroid.show(`Bem-vindo(a), ${userData.email}`, 2000);
+
+            // Redirecionamento
+            switch (userData.role) {
+                case "CLIENTE":
+                    router.replace('/home');
+                    break;
+                case "PRESTADOR":
+                    router.replace('/provider');
+                    break;
+                default:
                     ToastAndroid.show("Tipo de usuário desconhecido.", 2000);
-                }
+                    await AsyncStorage.multiRemove(['userEmail', 'userRole', 'userId']);
             }
         } catch (error) {
-            const axiosError = error as AxiosError<{
-                message?: string;
-                status?: string;
-            }>;
+            console.error('Erro no login:', error);
 
-            if (axiosError.response) {
-                if (axiosError.response.status === 404) {
-                    ToastAndroid.show("Usuário não encontrado.", 2000);
-                } else if (axiosError.response.status === 401) {
-                    ToastAndroid.show("Senha incorreta.", 2000);
+            if ((error as AxiosError).response) {
+                const axiosError = error as AxiosError;
+                if (axiosError.response?.status === 401) {
+                    ToastAndroid.show("Email ou senha incorretos", 2000);
+                } else if (axiosError.response?.status === 404) {
+                    ToastAndroid.show("Usuário não encontrado", 2000);
                 } else {
-                    ToastAndroid.show("Ocorreu um erro ao fazer login.", 2000);
+                    ToastAndroid.show("Erro ao conectar com o servidor", 2000);
                 }
-            } else if (axiosError.request) {
-                ToastAndroid.show("Sem resposta do servidor. Verifique sua conexão.", 2000);
             } else {
-                ToastAndroid.show("Ocorreu um erro inesperado.", 2000);
+                ToastAndroid.show("Erro ao fazer login", 2000);
             }
-            console.error(axiosError);
         } finally {
             setIsLoading(false);
+        }
+    };
+
+    // Adicione esta função em seu componente ou em um arquivo de serviços
+    const handleLogout = async () => {
+        try {
+            // Limpa todos os dados de autenticação
+            await AsyncStorage.multiRemove(['userEmail', 'userRole', 'userId']);
+
+            ToastAndroid.show('Logout realizado com sucesso', 2000);
+            router.replace('/'); // Redireciona para a tela de login
+        } catch (error) {
+            ToastAndroid.show('Erro ao fazer logout', 2000);
+            console.error('Logout error:', error);
         }
     };
 
@@ -76,7 +97,7 @@ export default function Login() {
             <Text style={{ fontFamily: fontFamily.bold, fontSize: 32, color: colors.purple[100] }}>
                 Esteticista Viviane Souza
             </Text>
-            <Text style={{ fontFamily: fontFamily.medium, fontSize: 18, color: colors.purple[100] }}>
+            <Text style={{ fontFamily: fontFamily.bold, fontSize: 18, color: colors.purple[100] }}>
                 Acesse sua conta !
             </Text>
 
@@ -111,9 +132,19 @@ export default function Login() {
                     secureTextEntry
                 />
             </View>
-            <Text onPress={() => router.push('/cadastro')} style={{ color: colors.purple[100], fontSize: 20, fontFamily: fontFamily.bold }}>
-                Não possui conta? Crie já
+            <Text onPress={() => router.push('/cadastro')} style={{ color: colors.purple[100], fontSize: 20, fontFamily: fontFamily.bold, marginTop: 10 }}>
+                Crie uma conta!
             </Text>
+            <Text
+                onPress={() => setShowForgotPasswordModal(true)}
+                style={{ color: colors.purple[100], fontSize: 20, fontFamily: fontFamily.bold }}
+            >
+                Esqueceu sua senha?
+            </Text>
+            <ForgotPasswordModal
+                visible={showForgotPasswordModal}
+                onClose={() => setShowForgotPasswordModal(false)}
+            />
             <Button style={{ width: 280, marginTop: 20 }} onPress={handleLogin} disabled={isLoading}>
                 <Text style={{ color: colors.gray[100], fontSize: 20, fontFamily: fontFamily.bold }}>
                     {isLoading ? "Carregando..." : "Entrar"}

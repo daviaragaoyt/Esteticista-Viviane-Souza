@@ -28,14 +28,12 @@ export function TabBar() {
     return (
         <View
             style={{
-                position: "absolute",
-                bottom: 0,
+                position: "relative",
+                marginTop: "36.5%",
                 width: "100%",
                 backgroundColor: colors.purple[100],
                 flexDirection: "row",
-                justifyContent: "space-around",
-                paddingVertical: 12,
-                borderTopWidth: 2,
+                paddingVertical: 4,
                 borderTopColor: colors.gray[300],
             }}
         >

@@ -100,7 +100,7 @@ const styles = StyleSheet.create({
         backgroundColor: "#f5f5f5",
         padding: 12,
         borderRadius: 8,
-        marginBottom: 12,
+        marginBottom: 8,
     },
     itemText: {
         fontFamily: fontFamily.regular,

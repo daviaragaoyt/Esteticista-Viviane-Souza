@@ -8,14 +8,14 @@
     "scheme": "myapp",
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
-    "backgroundColor": "#9871F3",
+    "backgroundColor": "#9477fe",
     "ios": {
       "supportsTablet": true
     },
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./src/assets/logo.png",
-        "backgroundColor": "#fff",
+        "backgroundColor": "#9477fe",
         "permissions": [
           "android.permission.CAMERA",
           "android.permission.READ_EXTERNAL_STORAGE",
@@ -37,7 +37,7 @@
           "image": "./src/assets/logo.png",
           "imageWidth": 200,
           "resizeMode": "contain",
-          "backgroundColor": "#fff"
+          "backgroundColor": "#9477fe"
         }
       ]
     ],
