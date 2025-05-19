@@ -2,9 +2,15 @@ import { api } from "@/src/services/api";
 import { colors, fontFamily } from "@/src/styles/theme";
 import { IconArrowLeft } from "@tabler/icons-react-native";
 import { useLocalSearchParams, useRouter } from "expo-router";
-import moment from "moment";
 import { useEffect, useState } from "react";
 import { Image, StyleSheet, Text, ToastAndroid, TouchableOpacity, View, ScrollView } from "react-native";
+import moment from "moment";
+import { Calendar, DateData, LocaleConfig } from "react-native-calendars";
+import { Feather } from "@expo/vector-icons";
+import { ptBR } from "../../utils/localeCalendarConfig";
+
+LocaleConfig.locales["pt-br"] = ptBR;
+LocaleConfig.defaultLocale = "pt-br";
 
 interface Servico {
     id: number;
@@ -16,19 +22,24 @@ interface Servico {
 }
 
 const availability: Record<string, string[]> = {
-    Segunda: ["09:00", "10:00", "11:00", "14:00", "15:00", "16:00"],
-    Terça: ["09:00", "10:00", "11:00", "14:00", "15:00", "16:00"],
-    Quarta: ["09:00", "10:00", "11:00", "14:00", "15:00", "16:00"],
-    Quinta: ["09:00", "10:00", "11:00", "14:00", "15:00", "16:00"],
-    Sexta: ["09:00", "10:00", "11:00", "14:00", "15:00", "16:00"],
-    Sábado: ["09:00", "10:00", "11:00", "14:00", "15:00", "16:00"]
+    Segunda: ["09:00", "10:00", "11:00", "12:00", "13:00", "14:00", "15:00", "16:00", "17:00"],
+    Terça: ["09:00", "10:00", "11:00", "12:00", "13:00", "14:00", "15:00", "16:00", "17:00"],
+    Quarta: ["09:00", "10:00", "11:00", "12:00", "13:00", "14:00", "15:00", "16:00", "17:00"],
+    Quinta: ["09:00", "10:00", "11:00", "12:00", "13:00", "14:00", "15:00", "16:00", "17:00"],
+    Sexta: ["09:00", "10:00", "11:00", "12:00", "13:00", "14:00", "15:00", "16:00", "17:00"]
+};
+
+const getAvailableTimes = (day: string | null): string[] => {
+    if (!day) return [];
+    const times = availability[day];
+    return Array.isArray(times) ? times : [];
 };
 
 export default function ServiceDetails() {
     const router = useRouter();
     const { id } = useLocalSearchParams();
     const [servico, setServico] = useState<Servico | null>(null);
-    const [selectedDay, setSelectedDay] = useState<string | null>(null);
+    const [selectedDate, setSelectedDate] = useState<DateData>();
     const [selectedTime, setSelectedTime] = useState<string | null>(null);
     const [isLoading, setIsLoading] = useState(false);
 
@@ -51,23 +62,38 @@ export default function ServiceDetails() {
         fetchServico();
     }, [id]);
 
+    const handleDayPress = (day: DateData) => {
+        const date = new Date(day.dateString);
+        const dayOfWeek = date.getDay();
+
+        if (dayOfWeek === 0 || dayOfWeek === 6) {
+            ToastAndroid.show("Não trabalhamos aos fins de semana", 2000);
+            return;
+        }
+
+        const weekDay = moment(day.dateString).format('dddd');
+        const capitalized = weekDay.charAt(0).toUpperCase() + weekDay.slice(1).split('-')[0];
+
+        if (availability[capitalized]) {
+            setSelectedDate(day);
+            setSelectedTime(null);
+        } else {
+            setSelectedDate(undefined);
+            setSelectedTime(null);
+            ToastAndroid.show("Dia não disponível para agendamento", 2000);
+        }
+    };
+
     const handleConfirm = async () => {
-        if (selectedDay && selectedTime && servico) {
+        if (selectedDate && selectedTime && servico) {
             try {
-                // Criar data no formato correto
                 const [hours, minutes] = selectedTime.split(':').map(Number);
-                const dataHora = new Date();
+                const dataHora = new Date(selectedDate.dateString);
                 dataHora.setHours(hours, minutes, 0, 0);
 
-                // Verificar se a data é válida
-                if (isNaN(dataHora.getTime())) {
-                    ToastAndroid.show("Horário selecionado é inválido", 2000);
-                    return;
-                }
-
                 const agendamentoData = {
-                    dataHora: dataHora.toISOString(), // Enviar como ISO string
-                    clienteId: 1, // Substitua pelo ID do cliente logado
+                    dataHora: dataHora.toISOString(),
+                    clienteId: 1,
                     servicoId: servico.id,
                 };
 
@@ -109,6 +135,11 @@ export default function ServiceDetails() {
         );
     }
 
+    const selectedDay = selectedDate ?
+        moment(selectedDate.dateString).format('dddd').charAt(0).toUpperCase() +
+        moment(selectedDate.dateString).format('dddd').slice(1).split('-')[0] :
+        null;
+
     return (
         <ScrollView style={styles.container}>
             <TouchableOpacity style={styles.backButton} onPress={() => router.back()}>
@@ -147,23 +178,42 @@ export default function ServiceDetails() {
 
             <View style={styles.availabilityContainer}>
                 <Text style={styles.sectionTitle}>Escolha um dia:</Text>
-                <View style={styles.gridContainer}>
-                    {Object.keys(availability).map((day) => (
-                        <TouchableOpacity
-                            key={day}
-                            style={[
-                                styles.dayButton,
-                                selectedDay === day && styles.selectedButton
-                            ]}
-                            onPress={() => {
-                                setSelectedDay(day);
-                                setSelectedTime(null);
-                            }}
-                        >
-                            <Text style={styles.dayText}>{day}</Text>
-                        </TouchableOpacity>
-                    ))}
-                </View>
+                <Calendar
+                    style={styles.calendar}
+                    renderArrow={(direction: "right" | "left") => (
+                        <Feather size={24} color={colors.purple[100]} name={`chevron-${direction}`} />
+                    )}
+                    headerStyle={{
+                        borderBottomWidth: 0.5,
+                        borderBottomColor: colors.gray[300],
+                        paddingBottom: 10,
+                        marginBottom: 10,
+                    }}
+                    theme={{
+                        textMonthFontSize: 18,
+                        monthTextColor: colors.purple[100],
+                        todayTextColor: colors.purple[100],
+                        selectedDayBackgroundColor: colors.purple[100],
+                        selectedDayTextColor: '#fff',
+                        arrowColor: colors.purple[100],
+                        calendarBackground: '#fff',
+                        textDayStyle: { color: colors.gray[600], fontFamily: fontFamily.regular },
+                        textDisabledColor: colors.gray[400],
+                        textDayHeaderFontFamily: fontFamily.medium,
+                        textDayHeaderFontSize: 14,
+                        textDayHeaderColor: colors.purple[100],
+                    }}
+                    minDate={new Date().toDateString()}
+                    hideExtraDays
+                    onDayPress={handleDayPress}
+                    markedDates={
+                        selectedDate ? {
+                            [selectedDate.dateString]: { selected: true }
+                        } : {}
+                    }
+                    disableAllTouchEventsForDisabledDays
+                    enableSwipeMonths
+                />
 
                 {selectedDay && (
                     <>
@@ -171,7 +221,7 @@ export default function ServiceDetails() {
                             Horários disponíveis para {selectedDay}:
                         </Text>
                         <View style={styles.gridContainer}>
-                            {availability[selectedDay].map((time) => (
+                            {getAvailableTimes(selectedDay).map((time) => (
                                 <TouchableOpacity
                                     key={time}
                                     style={[
@@ -187,7 +237,7 @@ export default function ServiceDetails() {
                     </>
                 )}
 
-                {selectedDay && selectedTime && (
+                {selectedDate && selectedTime && (
                     <TouchableOpacity
                         style={styles.confirmButton}
                         onPress={handleConfirm}
@@ -295,7 +345,6 @@ const styles = StyleSheet.create({
     availabilityContainer: {
         padding: 20,
         backgroundColor: '#fff',
-
         alignItems: 'center'
     },
     sectionTitle: {
@@ -312,45 +361,40 @@ const styles = StyleSheet.create({
         marginBottom: 20,
         gap: 10,
     },
-    dayButton: {
-        backgroundColor: colors.gray[400],
+    timeButton: {
+        backgroundColor: colors.gray[200],
         paddingVertical: 12,
         paddingHorizontal: 20,
         borderRadius: 8,
-    },
-    timeButton: {
-        backgroundColor: colors.gray[400],
-        paddingVertical: 10,
-        paddingHorizontal: 15,
-        borderRadius: 8,
+        minWidth: 80,
+        alignItems: 'center',
+        justifyContent: 'center',
     },
     selectedButton: {
         backgroundColor: colors.purple[100],
-    },
-    dayText: {
-        fontFamily: fontFamily.medium,
-        fontSize: 16,
-        color: 'white',
+        transform: [{ scale: 1.05 }],
     },
     timeText: {
         fontFamily: fontFamily.medium,
-        fontSize: 14,
-        color: 'white',
+        fontSize: 16,
+        color: '#333',
     },
     confirmButton: {
-        width: '110%',
-        height: '20%',
-        backgroundColor: colors.purple[100],
+        width: '100%',
         padding: 16,
+        backgroundColor: colors.purple[100],
         borderRadius: 8,
-        textAlign: 'center',
         alignItems: "center",
-        marginTop: 10,
+        marginTop: 20,
     },
     confirmButtonText: {
         fontFamily: fontFamily.bold,
-        fontSize: 24,
-        marginTop: 10,
+        fontSize: 18,
         color: "#fff",
+    },
+    calendar: {
+        marginBottom: 20,
+        borderRadius: 10,
+        width: '100%',
     },
 });

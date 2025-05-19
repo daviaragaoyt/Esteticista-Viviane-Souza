@@ -84,7 +84,7 @@ export default function ClientHome() {
             <Text style={styles.cardPrice}>{`R$ ${item.preco.toFixed(2)}`}</Text>
             <Text style={styles.cardDuration}>{`${item.duracao} min`}</Text>
           </View>
-          <Text style={styles.providerName}>Por: {item.prestador.nome}</Text>
+          <Text style={styles.providerName}>Funcionario(a): {item.prestador.nome}</Text>
         </View>
       </TouchableOpacity>
     );

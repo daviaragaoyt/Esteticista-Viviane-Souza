@@ -32,7 +32,7 @@ export default function ProviderServiceForm() {
     const [imagem, setImagem] = useState<string | null>(null);
     const [isLoading, setIsLoading] = useState(false);
 
-    const prestadorId = 1; // Substitua pela lógica real de obtenção do ID
+    const prestadorId = 14; // Substitua pela lógica real de obtenção do ID
 
     useEffect(() => {
         if (isEditMode) {

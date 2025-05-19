@@ -32,16 +32,13 @@ export default function ProviderDashboard() {
         setIsLoading(true);
         try {
             const response = await api.get("/servico");
+            console.log('Resposta da API:', response.data); // Para debug
             if (response.status === 200) {
-                const allServices: Servico[] = response.data.data;
-                const myServices = allServices.filter(
-                    (service) => service.prestador && service.prestador.id === providerId
-                );
-                setServicos(myServices);
+                setServicos(response.data.data);
             }
         } catch (error) {
+            console.error('Erro ao buscar serviços:', error);
             ToastAndroid.show("Não foi possível carregar os serviços.", 2000);
-            console.error(error);
         } finally {
             setIsLoading(false);
             setRefreshing(false);

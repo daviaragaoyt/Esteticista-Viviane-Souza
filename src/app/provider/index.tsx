@@ -75,7 +75,7 @@ export default function ProviderAppointments() {
                 />
             )}
             <TabBar />
-            <FloatingActionButton />
+            <FloatingActionButton onPress={() => router.push("/provider/new-service")} />
         </View>
     );
 }

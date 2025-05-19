@@ -49,10 +49,10 @@ export default function Login() {
             // Redirecionamento
             switch (userData.role) {
                 case "CLIENTE":
-                    router.replace('/home');
+                    router.push('/home');
                     break;
                 case "PRESTADOR":
-                    router.replace('/provider');
+                    router.push('/provider');
                     break;
                 default:
                     ToastAndroid.show("Tipo de usuário desconhecido.", 2000);
@@ -79,18 +79,18 @@ export default function Login() {
     };
 
     // Adicione esta função em seu componente ou em um arquivo de serviços
-    const handleLogout = async () => {
-        try {
-            // Limpa todos os dados de autenticação
-            await AsyncStorage.multiRemove(['userEmail', 'userRole', 'userId']);
+    // const handleLogout = async () => {
+    //     try {
+    //         // Limpa todos os dados de autenticação
+    //         await AsyncStorage.multiRemove(['userEmail', 'userRole', 'userId']);
 
-            ToastAndroid.show('Logout realizado com sucesso', 2000);
-            router.replace('/'); // Redireciona para a tela de login
-        } catch (error) {
-            ToastAndroid.show('Erro ao fazer logout', 2000);
-            console.error('Logout error:', error);
-        }
-    };
+    //         ToastAndroid.show('Logout realizado com sucesso', 2000);
+    //         router.replace('/'); // Redireciona para a tela de login
+    //     } catch (error) {
+    //         ToastAndroid.show('Erro ao fazer logout', 2000);
+    //         console.error('Logout error:', error);
+    //     }
+    // };
 
     return (
         <View style={{ flex: 1, justifyContent: "center", alignItems: "center", gap: 20 }}>

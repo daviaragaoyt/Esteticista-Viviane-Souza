@@ -28,14 +28,17 @@ export function TabBar() {
     return (
         <View
             style={{
-                position: "relative",
-                marginTop: "36.5%",
-                width: "100%",
+                position: "absolute",
+                bottom: 0,
+                left: 0,
+                right: 0,
                 backgroundColor: colors.purple[100],
                 flexDirection: "row",
-                paddingVertical: 4,
+                paddingVertical: 8,
                 borderTopColor: colors.gray[300],
+                borderTopWidth: 1,
             }}
+
         >
             {tabs.map((tab, index) => {
                 const isActive = currentRoute === tab.route;

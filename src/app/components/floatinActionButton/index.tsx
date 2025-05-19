@@ -1,17 +1,18 @@
-import { View, TouchableOpacity } from "react-native";
-import { useRouter } from "expo-router";
 import { FontAwesome5 } from "@expo/vector-icons";
-import { colors } from "@/src/styles/colors";
+import { TouchableOpacity } from "react-native";
+import { colors } from '@/src/styles/theme';
 
-export function FloatingActionButton() {
-    const router = useRouter();
+interface FloatingActionButtonProps {
+    onPress: () => void;
+}
 
+export function FloatingActionButton({ onPress }: FloatingActionButtonProps) {
     return (
         <TouchableOpacity
-            onPress={() => router.push("/provider/new-service")} // Redireciona para criação de serviço
+            onPress={onPress}
             style={{
                 position: "absolute",
-                bottom: 120, // Posiciona acima da TabBar
+                bottom: 120,
                 right: 30,
                 backgroundColor: colors.purple[100],
                 width: 60,
@@ -23,7 +24,7 @@ export function FloatingActionButton() {
                 shadowOffset: { width: 0, height: 2 },
                 shadowOpacity: 0.2,
                 shadowRadius: 4,
-                elevation: 5, // Sombra no Android
+                elevation: 5,
             }}
         >
             <FontAwesome5 name="plus" size={24} color="#fff" />
