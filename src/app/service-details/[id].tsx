@@ -8,6 +8,7 @@ import moment from "moment";
 import { Calendar, DateData, LocaleConfig } from "react-native-calendars";
 import { Feather } from "@expo/vector-icons";
 import { ptBR } from "../../utils/localeCalendarConfig";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 LocaleConfig.locales["pt-br"] = ptBR;
 LocaleConfig.defaultLocale = "pt-br";
@@ -22,11 +23,11 @@ interface Servico {
 }
 
 const availability: Record<string, string[]> = {
-    Segunda: ["09:00", "10:00", "11:00", "12:00", "13:00", "14:00", "15:00", "16:00", "17:00"],
-    Terça: ["09:00", "10:00", "11:00", "12:00", "13:00", "14:00", "15:00", "16:00", "17:00"],
-    Quarta: ["09:00", "10:00", "11:00", "12:00", "13:00", "14:00", "15:00", "16:00", "17:00"],
-    Quinta: ["09:00", "10:00", "11:00", "12:00", "13:00", "14:00", "15:00", "16:00", "17:00"],
-    Sexta: ["09:00", "10:00", "11:00", "12:00", "13:00", "14:00", "15:00", "16:00", "17:00"]
+    Monday: ["09:00", "10:00", "11:00", "12:00", "13:00", "14:00", "15:00", "16:00", "17:00"],
+    Tuesday: ["09:00", "10:00", "11:00", "12:00", "13:00", "14:00", "15:00", "16:00", "17:00"],
+    Wednesday: ["09:00", "10:00", "11:00", "12:00", "13:00", "14:00", "15:00", "16:00", "17:00"],
+    Thursday: ["09:00", "10:00", "11:00", "12:00", "13:00", "14:00", "15:00", "16:00", "17:00"],
+    Friday: ["09:00", "10:00", "11:00", "12:00", "13:00", "14:00", "15:00", "16:00", "17:00"]
 };
 
 const getAvailableTimes = (day: string | null): string[] => {
@@ -37,16 +38,24 @@ const getAvailableTimes = (day: string | null): string[] => {
 
 export default function ServiceDetails() {
     const router = useRouter();
-    const { id } = useLocalSearchParams();
+    const { id: itemID } = useLocalSearchParams();
     const [servico, setServico] = useState<Servico | null>(null);
     const [selectedDate, setSelectedDate] = useState<DateData>();
     const [selectedTime, setSelectedTime] = useState<string | null>(null);
     const [isLoading, setIsLoading] = useState(false);
+    const [userID, setUserID] = useState<string | null>()
+
+    useEffect(() => {
+        (async () => {
+            const result = await AsyncStorage.getItem('userId')
+            if (result) setUserID(result)
+        })()
+    }, [])
 
     const fetchServico = async () => {
         setIsLoading(true);
         try {
-            const response = await api.get(`/servico/${id}`);
+            const response = await api.get(`/servico/${itemID}`);
             if (response.status === 200) {
                 setServico(response.data.data);
             }
@@ -60,7 +69,7 @@ export default function ServiceDetails() {
 
     useEffect(() => {
         fetchServico();
-    }, [id]);
+    }, [itemID]);
 
     const handleDayPress = (day: DateData) => {
         const date = new Date(day.dateString);
@@ -73,6 +82,8 @@ export default function ServiceDetails() {
 
         const weekDay = moment(day.dateString).format('dddd');
         const capitalized = weekDay.charAt(0).toUpperCase() + weekDay.slice(1).split('-')[0];
+
+        console.log('tst', capitalized)
 
         if (availability[capitalized]) {
             setSelectedDate(day);
@@ -93,7 +104,7 @@ export default function ServiceDetails() {
 
                 const agendamentoData = {
                     dataHora: dataHora.toISOString(),
-                    clienteId: 1,
+                    clienteId: userID,
                     servicoId: servico.id,
                 };
 

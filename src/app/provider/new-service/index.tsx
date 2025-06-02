@@ -7,6 +7,7 @@ import { Button } from '@/src/app/components/button';
 import { TabBar } from "@/src/app/components/tabbar";
 import * as ImagePicker from 'expo-image-picker';
 import * as FileSystem from 'expo-file-system';
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 interface Servico {
     id?: number;
@@ -31,8 +32,16 @@ export default function ProviderServiceForm() {
     const [duracao, setDuracao] = useState("");
     const [imagem, setImagem] = useState<string | null>(null);
     const [isLoading, setIsLoading] = useState(false);
+    const [userID, setUserID] = useState<string | null>()
 
-    const prestadorId = 14; // Substitua pela lógica real de obtenção do ID
+    const prestadorId = 16; // Substitua pela lógica real de obtenção do ID
+
+    useEffect(() => {
+        (async () => {
+            const result = await AsyncStorage.getItem('userId')
+            if (result) setUserID(result)
+        })()
+    }, [])
 
     useEffect(() => {
         if (isEditMode) {
