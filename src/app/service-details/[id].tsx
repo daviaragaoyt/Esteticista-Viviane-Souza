@@ -111,7 +111,7 @@ export default function ServiceDetails() {
                 const response = await api.post('/agendamento', agendamentoData);
                 if (response.status === 201) {
                     ToastAndroid.show("Agendamento realizado com sucesso!", 2000);
-                    router.push("/loading");
+                    router.replace("/loading");
                 }
             } catch (error) {
                 if (error instanceof Error && 'response' in error) {

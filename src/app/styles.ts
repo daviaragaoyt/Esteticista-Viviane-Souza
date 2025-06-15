@@ -1,47 +1,53 @@
+// styles.ts
 import { StyleSheet } from "react-native";
 import { colors } from "@/src/styles/colors";
 import { fontFamily } from "@/src/styles/font-family";
 
 export const styles = StyleSheet.create({
-
-
-    title: {
-        fontSize: 32,
-        fontFamily: fontFamily.bold,
-    },
-    subtitle: {
-        fontSize: 18,
-        fontFamily: fontFamily.bold,
-    },
-    loginContainer: {
-        backgroundColor: colors.purple[100],
-        borderRadius: 20,
-        height: "50%",
-        padding: 20,
+    container: {
+        flex: 1,
         justifyContent: "center",
-    },
-
-    headerText: {
-        fontFamily: fontFamily.bold,
-        fontSize: 35,
-        color: colors.gray[100],
-    },
-    inputContainer: {
+        alignItems: "center",
         gap: 20,
     },
-    inputWrapper: {
-        flexDirection: "row",
-        alignItems: "center",
-        borderRadius: 5,
-        backgroundColor: colors.gray[100],
-        paddingHorizontal: 10,
-        width: "100%",
+    title: {
+        fontFamily: fontFamily.bold,
+        fontSize: 32,
+        color: colors.purple[100],
+    },
+    subtitle: {
+        fontFamily: fontFamily.bold,
+        fontSize: 18,
+        color: colors.purple[100],
+    },
+    formContainer: {
+        width: "90%",
+        gap: 10,
+        backgroundColor: colors.purple[100],
+        borderRadius: 8,
+        padding: 32,
     },
     input: {
-        flex: 1,
-        paddingVertical: 10,
+        backgroundColor: colors.gray[100],
+        borderWidth: 1,
+        borderColor: colors.gray[300],
+        borderRadius: 8,
+        padding: 10,
+        fontFamily: fontFamily.regular,
     },
-    icon: {
-        marginLeft: 10,
+    linkText: {
+        color: colors.purple[100],
+        fontSize: 20,
+        fontFamily: fontFamily.bold,
+        marginTop: 10,
+    },
+    loginButton: {
+        width: 280,
+        marginTop: 20,
+    },
+    buttonText: {
+        color: colors.gray[100],
+        fontSize: 20,
+        fontFamily: fontFamily.bold,
     },
 });

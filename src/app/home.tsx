@@ -121,6 +121,9 @@ const styles = StyleSheet.create({
   header: {
     fontFamily: fontFamily.bold,
     fontSize: 24,
+    justifyContent:'center',
+    alignItems:'center',
+    marginTop:20,
     marginBottom: 20,
     color: colors.purple[100],
     textAlign: 'center',

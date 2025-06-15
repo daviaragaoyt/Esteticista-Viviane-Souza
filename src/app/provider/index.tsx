@@ -90,7 +90,9 @@ const styles = StyleSheet.create({
         fontFamily: fontFamily.bold,
         fontSize: 24,
         color: colors.purple[100],
-        marginBottom: 16,
+        marginBottom: 30,
+        marginTop: 30,
+        textAlign: 'center'
     },
     loadingText: {
         fontFamily: fontFamily.regular,
@@ -98,7 +100,7 @@ const styles = StyleSheet.create({
     },
     item: {
         backgroundColor: "#f5f5f5",
-        padding: 12,
+        padding: 16,
         borderRadius: 8,
         marginBottom: 8,
     },
@@ -106,7 +108,7 @@ const styles = StyleSheet.create({
         fontFamily: fontFamily.regular,
     },
     cancelButton: {
-        backgroundColor: "red",
+        backgroundColor: "#900D09",
         padding: 8,
         borderRadius: 8,
         marginTop: 8,

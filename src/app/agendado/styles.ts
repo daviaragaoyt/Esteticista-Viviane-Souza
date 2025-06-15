@@ -5,6 +5,7 @@ export default StyleSheet.create({
         flex: 1,
         justifyContent: "center",
         alignItems: "center",
+        textAlign: 'center',
         backgroundColor: colors.purple[100],
     },
     title: {

@@ -49,10 +49,10 @@ export default function Login() {
             // Redirecionamento
             switch (userData.role) {
                 case "CLIENTE":
-                    router.push('/home');
+                    router.replace('/home');
                     break;
                 case "PRESTADOR":
-                    router.push('/provider');
+                    router.replace('/provider');
                     break;
                 default:
                     ToastAndroid.show("Tipo de usuário desconhecido.", 2000);
