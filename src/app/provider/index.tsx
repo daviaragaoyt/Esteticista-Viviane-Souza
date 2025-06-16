@@ -1,6 +1,6 @@
 // app/provider/appointments.tsx
 import { api } from "@/src/services/api";
-import { colors, fontFamily } from "@/src/styles/theme";
+import { colors } from "@/src/styles/theme";
 import { useRouter } from "expo-router";
 import React, { useEffect, useState } from "react";
 import { FlatList, StyleSheet, Text, ToastAndroid, TouchableOpacity, View } from "react-native";
@@ -87,7 +87,7 @@ const styles = StyleSheet.create({
         backgroundColor: "#fff",
     },
     header: {
-        fontFamily: fontFamily.bold,
+
         fontSize: 24,
         color: colors.purple[100],
         marginBottom: 30,
@@ -95,7 +95,7 @@ const styles = StyleSheet.create({
         textAlign: 'center'
     },
     loadingText: {
-        fontFamily: fontFamily.regular,
+
         textAlign: "center",
     },
     item: {
@@ -105,7 +105,7 @@ const styles = StyleSheet.create({
         marginBottom: 8,
     },
     itemText: {
-        fontFamily: fontFamily.regular,
+
     },
     cancelButton: {
         backgroundColor: "#900D09",
@@ -115,7 +115,7 @@ const styles = StyleSheet.create({
     },
     cancelButtonText: {
         color: "#fff",
-        fontFamily: fontFamily.bold,
+
         textAlign: "center",
     },
 });

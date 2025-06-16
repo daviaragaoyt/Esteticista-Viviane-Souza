@@ -1,5 +1,5 @@
 import { api } from "@/src/services/api";
-import { colors, fontFamily } from "@/src/styles/theme";
+import { colors } from "@/src/styles/theme";
 import { Feather } from "@expo/vector-icons";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useLocalSearchParams, useRouter } from "expo-router";
@@ -74,7 +74,7 @@ export default function ServiceDetails() {
         const date = new Date(day.dateString);
         const dayOfWeek = date.getDay();
 
-        if (dayOfWeek === 0 || dayOfWeek === 6) {
+        if (dayOfWeek === 0 || dayOfWeek === 5) {
             ToastAndroid.show("Não trabalhamos aos fins de semana", 2000);
             return;
         }
@@ -152,9 +152,7 @@ export default function ServiceDetails() {
 
     return (
         <ScrollView style={styles.container}>
-            <TouchableOpacity style={styles.backButton} onPress={() => router.back()}>
-                <Feather name="arrow-left" color={colors.gray[100]} size={24} />
-            </TouchableOpacity>
+
 
             <View style={styles.imageContainer}>
                 {servico.imagem ? (
@@ -207,9 +205,9 @@ export default function ServiceDetails() {
                         selectedDayTextColor: '#fff',
                         arrowColor: colors.purple[100],
                         calendarBackground: '#fff',
-                        textDayStyle: { color: colors.gray[600], fontFamily: fontFamily.regular },
+                        textDayStyle: { color: colors.gray[600], },
                         textDisabledColor: colors.gray[400],
-                        textDayHeaderFontFamily: fontFamily.medium,
+
                         textDayHeaderFontSize: 14,
                     }}
                     minDate={new Date().toDateString()}
@@ -277,12 +275,12 @@ const styles = StyleSheet.create({
         alignItems: 'center',
     },
     loadingText: {
-        fontFamily: fontFamily.regular,
+
         fontSize: 16,
         color: colors.gray[600],
     },
     errorText: {
-        fontFamily: fontFamily.regular,
+
         fontSize: 16,
         color: colors.gray[600],
     },
@@ -309,7 +307,7 @@ const styles = StyleSheet.create({
         alignItems: 'center',
     },
     noImageText: {
-        fontFamily: fontFamily.regular,
+
         fontSize: 16,
         color: colors.gray[500],
     },
@@ -319,13 +317,12 @@ const styles = StyleSheet.create({
         marginBottom: 10,
     },
     title: {
-        fontFamily: fontFamily.bold,
         fontSize: 24,
         color: colors.purple[100],
         marginBottom: 10,
     },
     description: {
-        fontFamily: fontFamily.regular,
+
         fontSize: 16,
         color: colors.gray[600],
         marginBottom: 20,
@@ -341,13 +338,13 @@ const styles = StyleSheet.create({
         alignItems: 'center',
     },
     infoLabel: {
-        fontFamily: fontFamily.medium,
+
         fontSize: 16,
         color: colors.gray[600],
         marginRight: 5,
     },
     infoValue: {
-        fontFamily: fontFamily.bold,
+
         fontSize: 16,
         color: colors.purple[100],
     },
@@ -357,7 +354,7 @@ const styles = StyleSheet.create({
         alignItems: 'center'
     },
     sectionTitle: {
-        fontFamily: fontFamily.bold,
+
         fontSize: 18,
         color: colors.purple[100],
         marginBottom: 15,
@@ -384,7 +381,7 @@ const styles = StyleSheet.create({
         transform: [{ scale: 1.05 }],
     },
     timeText: {
-        fontFamily: fontFamily.medium,
+
         fontSize: 16,
         color: '#333',
     },
@@ -397,8 +394,7 @@ const styles = StyleSheet.create({
         marginTop: 20,
     },
     confirmButtonText: {
-        fontFamily: fontFamily.bold,
-        fontSize: 18,
+
         color: "#fff",
     },
     calendar: {

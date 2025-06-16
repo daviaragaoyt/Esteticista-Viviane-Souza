@@ -1,8 +1,11 @@
 import React, { useState } from "react";
-import { View, Text, Modal, TouchableWithoutFeedback } from "react-native";
+import { View, Text, Modal, TouchableWithoutFeedback, TouchableOpacity } from "react-native";
 import { Button } from "../components/button";
 // import MapView, { Marker } from "react-native-maps";
 import styles from "./styles";
+import { Feather } from "@expo/vector-icons";
+import { colors } from "@/src/styles/theme";
+import { router } from "expo-router";
 
 const ServicoAgendado = () => {
     const [modalVisible, setModalVisible] = useState(false);
@@ -13,6 +16,9 @@ const ServicoAgendado = () => {
 
     return (
         <View style={styles.container}>
+            <TouchableOpacity style={styles.backButton} onPress={() => router.back()}>
+                <Feather name="arrow-left" color={colors.gray[100]} size={24} />
+            </TouchableOpacity>
             <Text style={styles.title}>Agendamento Confirmado!</Text>
             <Button onPress={() => setModalVisible(true)}>
                 <Button.Title>Ver Localização</Button.Title>

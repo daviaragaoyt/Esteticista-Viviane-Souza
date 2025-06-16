@@ -1,7 +1,7 @@
 import React from 'react';
 import { View, Text, FlatList, StyleSheet, TouchableOpacity, ActivityIndicator } from 'react-native';
 import { useNotifications } from '@/src/contexts/NotificationContext';
-import { colors, fontFamily } from '@/src/styles/theme';
+import { colors } from '@/src/styles/theme';
 import { Feather } from '@expo/vector-icons';
 import { Stack } from 'expo-router';
 
@@ -44,7 +44,7 @@ export default function NotificationsScreen() {
                     headerRight: () => (
                         unreadCount > 0 && (
                             <TouchableOpacity onPress={markAllAsRead} style={{ marginRight: 15 }}>
-                                <Text style={{ color: colors.purple[100], fontFamily: fontFamily.medium }}>
+                                <Text style={{ color: colors.purple[100] }}>
                                     Marcar todas como lidas
                                 </Text>
                             </TouchableOpacity>
@@ -80,7 +80,7 @@ const styles = StyleSheet.create({
     unreadItem: { backgroundColor: colors.purple[100] },
     iconContainer: { marginRight: 16 },
     textContainer: { flex: 1 },
-    message: { fontFamily: fontFamily.regular, fontSize: 16, color: colors.gray[600] },
-    date: { fontFamily: fontFamily.bold, fontSize: 12, color: colors.gray[500], marginTop: 4 },
-    emptyText: { textAlign: 'center', marginTop: 50, fontFamily: fontFamily.regular, color: colors.gray[500] },
+    message: { fontSize: 16, color: colors.gray[600] },
+    date: { fontSize: 12, color: colors.gray[500], marginTop: 4 },
+    emptyText: { textAlign: 'center', marginTop: 50, color: colors.gray[500] },
 });

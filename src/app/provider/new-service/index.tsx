@@ -1,7 +1,7 @@
 import { Button } from '@/src/app/components/button';
 import { TabBar } from "@/src/app/components/tabbar";
 import { api } from "@/src/services/api";
-import { colors, fontFamily } from "@/src/styles/theme";
+import { colors } from "@/src/styles/theme";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import * as ImagePicker from 'expo-image-picker';
 import { useLocalSearchParams, useRouter } from "expo-router";
@@ -234,9 +234,11 @@ const styles = StyleSheet.create({
         backgroundColor: "#fff"
     },
     header: {
-        fontFamily: fontFamily.bold,
+
         fontSize: 24,
-        marginBottom: 16,
+        marginBottom: 30,
+        textAlign: 'center',
+        marginTop: 30,
         color: colors.purple[100]
     },
     input: {
@@ -271,7 +273,7 @@ const styles = StyleSheet.create({
     buttonText: {
         color: '#fff',
         textAlign: 'center',
-        fontFamily: fontFamily.medium,
+
     },
     submitButton: {
         backgroundColor: colors.purple[100],
@@ -281,7 +283,7 @@ const styles = StyleSheet.create({
     },
     submitButtonText: {
         color: "#fff",
-        fontFamily: fontFamily.bold,
+
         textAlign: "center"
     },
 });

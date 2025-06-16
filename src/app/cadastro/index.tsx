@@ -2,7 +2,7 @@
 import { Button } from "@/src/app/components/button";
 import { api } from "@/src/services/api";
 import { colors } from "@/src/styles/colors";
-import { fontFamily } from "@/src/styles/font-family";
+
 import { router } from "expo-router";
 import { useState } from "react";
 import { Text, TextInput, ToastAndroid, View } from "react-native";
@@ -42,7 +42,7 @@ export default function Register() {
 
     return (
         <View style={{ flex: 1, justifyContent: "center", alignItems: "center", gap: 20 }}>
-            <Text style={{ fontFamily: fontFamily.bold, fontSize: 32, color: colors.purple[100] }}>
+            <Text style={{ fontSize: 32, color: colors.purple[100] }}>
                 Cadastro
             </Text>
 
@@ -54,7 +54,7 @@ export default function Register() {
                         borderColor: colors.gray[300],
                         borderRadius: 8,
                         padding: 10,
-                        fontFamily: fontFamily.regular,
+
                     }}
                     placeholder="Nome"
                     value={nome}
@@ -67,7 +67,7 @@ export default function Register() {
                         borderColor: colors.gray[300],
                         borderRadius: 8,
                         padding: 10,
-                        fontFamily: fontFamily.regular,
+
                     }}
                     placeholder="Email"
                     value={email}
@@ -82,7 +82,7 @@ export default function Register() {
                         borderColor: colors.gray[300],
                         borderRadius: 8,
                         padding: 10,
-                        fontFamily: fontFamily.regular,
+
                     }}
                     placeholder="Senha"
                     value={password}
@@ -96,7 +96,7 @@ export default function Register() {
                         borderColor: colors.gray[300],
                         borderRadius: 8,
                         padding: 10,
-                        fontFamily: fontFamily.regular,
+
                     }}
                     placeholder="Data de Nascimento (DD/MM/AAAA)"
                     value={dataNascimento}
@@ -109,7 +109,7 @@ export default function Register() {
                         borderColor: colors.gray[300],
                         borderRadius: 8,
                         padding: 10,
-                        fontFamily: fontFamily.regular,
+
                     }}
                     placeholder="Telefone"
                     value={telefone}
@@ -123,18 +123,18 @@ export default function Register() {
                         borderColor: colors.gray[300],
                         borderRadius: 8,
                         padding: 10,
-                        fontFamily: fontFamily.regular,
+
                     }}
                     placeholder="Endereço"
                     value={endereco}
                     onChangeText={setEndereco}
                 />
             </View>
-            <Text onPress={() => router.push('/')} style={{ color: colors.purple[100], fontSize: 20, fontFamily: fontFamily.bold }}>
+            <Text onPress={() => router.push('/')} style={{ color: colors.purple[100], fontSize: 20, }}>
                 Já possui conta? Entre já
             </Text>
             <Button style={{ width: 280, marginTop: 20 }} onPress={handleRegister}>
-                <Text style={{ color: colors.gray[100], fontSize: 18, fontFamily: fontFamily.bold }}>Cadastrar</Text>
+                <Text style={{ color: colors.gray[100], fontSize: 18, }}>Cadastrar</Text>
             </Button>
         </View>
     );

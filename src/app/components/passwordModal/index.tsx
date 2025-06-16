@@ -2,7 +2,6 @@ import { useState } from "react";
 import { Modal, View, Text, TextInput, ToastAndroid, TouchableOpacity } from "react-native";
 import { api } from "@/src/services/api";
 import { colors } from "@/src/styles/theme";
-import { fontFamily } from "@/src/styles/font-family";
 import { Button } from "@/src/app/components/button";
 
 interface ForgotPasswordModalProps {
@@ -88,7 +87,7 @@ export function ForgotPasswordModal({ visible, onClose }: ForgotPasswordModalPro
                     padding: 30
                 }}>
                     <Text style={{
-                        fontFamily: fontFamily.bold,
+
                         fontSize: 25,
                         color: colors.purple[100],
                         marginBottom: 30,
@@ -100,7 +99,7 @@ export function ForgotPasswordModal({ visible, onClose }: ForgotPasswordModalPro
                     {step === "email" ? (
                         <>
                             <Text style={{
-                                fontFamily: fontFamily.bold,
+
                                 marginBottom: 20,
                                 color: colors.purple[100]
                             }}>
@@ -113,7 +112,7 @@ export function ForgotPasswordModal({ visible, onClose }: ForgotPasswordModalPro
                                     borderColor: colors.gray[300],
                                     borderRadius: 8,
                                     padding: 10,
-                                    fontFamily: fontFamily.regular,
+
                                     marginBottom: 30
                                 }}
                                 placeholder="Seu email"
@@ -126,7 +125,7 @@ export function ForgotPasswordModal({ visible, onClose }: ForgotPasswordModalPro
                     ) : (
                         <>
                             <Text style={{
-                                fontFamily: fontFamily.regular,
+
                                 marginBottom: 10,
                                 color: colors.gray[500]
                             }}>
@@ -139,7 +138,7 @@ export function ForgotPasswordModal({ visible, onClose }: ForgotPasswordModalPro
                                     borderColor: colors.gray[300],
                                     borderRadius: 8,
                                     padding: 10,
-                                    fontFamily: fontFamily.regular,
+
                                     marginBottom: 20
                                 }}
                                 placeholder="Nova senha"
@@ -156,7 +155,7 @@ export function ForgotPasswordModal({ visible, onClose }: ForgotPasswordModalPro
                             onPress={onClose}
 
                         >
-                            <Text style={{ color: colors.gray[100], fontFamily: fontFamily.bold }}>
+                            <Text style={{ color: colors.gray[100] }}>
                                 Cancelar
                             </Text>
 
@@ -167,7 +166,7 @@ export function ForgotPasswordModal({ visible, onClose }: ForgotPasswordModalPro
                             onPress={step === "email" ? handleVerifyEmail : handleResetPassword}
                             disabled={isLoading}
                         >
-                            <Text style={{ color: colors.gray[100], fontFamily: fontFamily.bold }}>
+                            <Text style={{ color: colors.gray[100] }}>
                                 {isLoading ? "Carregando..." : step === "email" ? "Continuar" : "Redefinir Senha"}
                             </Text>
                         </Button>

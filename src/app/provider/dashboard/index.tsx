@@ -1,5 +1,5 @@
 import { api } from "@/src/services/api";
-import { colors, fontFamily } from "@/src/styles/theme";
+import { colors } from "@/src/styles/theme";
 import { useRouter } from "expo-router";
 import React, { useEffect, useState } from "react";
 import { FlatList, Image, StyleSheet, Text, ToastAndroid, TouchableOpacity, View } from "react-native";
@@ -139,21 +139,23 @@ const styles = StyleSheet.create({
         backgroundColor: "#fff"
     },
     header: {
-        fontFamily: fontFamily.bold,
+
         fontSize: 24,
-        marginBottom: 16,
+        marginBottom: 30,
+        textAlign: 'center',
+        marginTop: 30,
         color: colors.purple[100],
     },
     listContent: {
         paddingBottom: 80,
     },
     loadingText: {
-        fontFamily: fontFamily.regular,
+
         textAlign: "center",
         marginTop: 20,
     },
     emptyText: {
-        fontFamily: fontFamily.regular,
+
         textAlign: "center",
         marginTop: 20,
         color: colors.gray[500],
@@ -183,7 +185,7 @@ const styles = StyleSheet.create({
         alignItems: 'center',
     },
     noImageText: {
-        fontFamily: fontFamily.regular,
+
         fontSize: 12,
         color: colors.gray[500],
     },
@@ -192,13 +194,13 @@ const styles = StyleSheet.create({
         justifyContent: 'space-between',
     },
     itemTitle: {
-        fontFamily: fontFamily.bold,
+
         fontSize: 16,
         color: colors.purple[100],
         marginBottom: 4,
     },
     itemDescription: {
-        fontFamily: fontFamily.regular,
+
         fontSize: 14,
         color: colors.gray[600],
         marginBottom: 8,
@@ -208,12 +210,12 @@ const styles = StyleSheet.create({
         justifyContent: 'space-between',
     },
     itemPrice: {
-        fontFamily: fontFamily.bold,
+
         fontSize: 16,
         color: colors.purple[100],
     },
     itemDuration: {
-        fontFamily: fontFamily.regular,
+
         fontSize: 14,
         color: colors.gray[500],
     },
@@ -236,7 +238,7 @@ const styles = StyleSheet.create({
     },
     buttonText: {
         color: "#fff",
-        fontFamily: fontFamily.medium,
+
         fontSize: 14,
         textAlign: 'center',
     },

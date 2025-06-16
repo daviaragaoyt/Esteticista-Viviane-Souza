@@ -1,5 +1,5 @@
 import { api } from "@/src/services/api";
-import { colors, fontFamily } from "@/src/styles/theme";
+import { colors } from "@/src/styles/theme";
 import { useRouter } from "expo-router";
 import React, { useEffect, useState } from "react";
 import { FlatList, Image, StyleSheet, Text, ToastAndroid, TouchableOpacity, View } from "react-native";
@@ -119,23 +119,23 @@ const styles = StyleSheet.create({
     backgroundColor: "#fff"
   },
   header: {
-    fontFamily: fontFamily.bold,
+
     fontSize: 24,
-    justifyContent:'center',
-    alignItems:'center',
-    marginTop:20,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginTop: 20,
     marginBottom: 20,
     color: colors.purple[100],
     textAlign: 'center',
   },
   loadingText: {
-    fontFamily: fontFamily.regular,
+
     textAlign: 'center',
     marginTop: 20,
     color: colors.gray[500],
   },
   emptyText: {
-    fontFamily: fontFamily.regular,
+
     textAlign: 'center',
     marginTop: 20,
     color: colors.gray[500],
@@ -167,7 +167,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   placeholderText: {
-    fontFamily: fontFamily.regular,
+
     fontSize: 16,
     color: colors.gray[500],
   },
@@ -175,13 +175,13 @@ const styles = StyleSheet.create({
     padding: 16,
   },
   cardTitle: {
-    fontFamily: fontFamily.bold,
+
     fontSize: 18,
     color: colors.purple[100],
     marginBottom: 8,
   },
   cardDescription: {
-    fontFamily: fontFamily.regular,
+
     fontSize: 14,
     color: colors.gray[600],
     marginBottom: 12,
@@ -193,17 +193,17 @@ const styles = StyleSheet.create({
     marginBottom: 8,
   },
   cardPrice: {
-    fontFamily: fontFamily.bold,
+
     fontSize: 16,
     color: colors.purple[100],
   },
   cardDuration: {
-    fontFamily: fontFamily.regular,
+
     fontSize: 14,
     color: colors.gray[500],
   },
   providerName: {
-    fontFamily: fontFamily.medium,
+
     fontSize: 14,
     color: colors.gray[600],
     fontStyle: 'italic',

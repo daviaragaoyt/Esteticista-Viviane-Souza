@@ -1,7 +1,7 @@
 import { Button } from "@/src/app/components/button";
 import { api } from "@/src/services/api";
 import { colors } from "@/src/styles/colors";
-import { fontFamily } from "@/src/styles/font-family";
+
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { AxiosError } from "axios"; // Importe AxiosError para tipar o erro
 import { router } from "expo-router";
@@ -95,10 +95,10 @@ export default function Login() {
 
     return (
         <View style={{ flex: 1, justifyContent: "center", alignItems: "center", gap: 20 }}>
-            <Text style={{ fontFamily: fontFamily.bold, fontSize: 32, color: colors.purple[100] }}>
+            <Text style={{ fontSize: 32, color: colors.purple[100] }}>
                 Esteticista Viviane Souza
             </Text>
-            <Text style={{ fontFamily: fontFamily.bold, fontSize: 18, color: colors.purple[100] }}>
+            <Text style={{ fontSize: 18, color: colors.purple[100] }}>
                 Acesse sua conta !
             </Text>
 
@@ -110,7 +110,7 @@ export default function Login() {
                         borderColor: colors.gray[300],
                         borderRadius: 8,
                         padding: 10,
-                        fontFamily: fontFamily.regular,
+
                     }}
                     placeholder="Email"
                     value={email}
@@ -125,7 +125,7 @@ export default function Login() {
                         borderColor: colors.gray[300],
                         borderRadius: 8,
                         padding: 10,
-                        fontFamily: fontFamily.regular,
+
                     }}
                     placeholder="Senha"
                     value={password}
@@ -133,12 +133,12 @@ export default function Login() {
                     secureTextEntry
                 />
             </View>
-            <Text onPress={() => router.push('/cadastro')} style={{ color: colors.purple[100], fontSize: 20, fontFamily: fontFamily.bold, marginTop: 10 }}>
+            <Text onPress={() => router.push('/cadastro')} style={{ color: colors.purple[100], fontSize: 20, marginTop: 10 }}>
                 Crie uma conta!
             </Text>
             <Text
                 onPress={() => setShowForgotPasswordModal(true)}
-                style={{ color: colors.purple[100], fontSize: 20, fontFamily: fontFamily.bold }}
+                style={{ color: colors.purple[100], fontSize: 20, }}
             >
                 Esqueceu sua senha?
             </Text>
@@ -147,7 +147,7 @@ export default function Login() {
                 onClose={() => setShowForgotPasswordModal(false)}
             />
             <Button style={{ width: 280, marginTop: 20 }} onPress={handleLogin} disabled={isLoading}>
-                <Text style={{ color: colors.gray[100], fontSize: 20, fontFamily: fontFamily.bold }}>
+                <Text style={{ color: colors.gray[100], fontSize: 20, }}>
                     {isLoading ? "Carregando..." : "Entrar"}
                 </Text>
             </Button>

@@ -1,5 +1,5 @@
 import { StyleSheet } from "react-native";
-import { colors, fontFamily } from '@/src/styles/theme'
+import { colors } from '@/src/styles/theme'
 export default StyleSheet.create({
     container: {
         flex: 1,
@@ -20,6 +20,15 @@ export default StyleSheet.create({
         alignItems: "center",
         backgroundColor: "rgba(0,0,0,0.5)",
 
+    },
+    backButton: {
+        position: "absolute",
+        top: 40,
+        left: 20,
+        backgroundColor: colors.purple[100],
+        padding: 8,
+        borderRadius: 20,
+        zIndex: 10,
     },
     map: {
         width: "90%",
