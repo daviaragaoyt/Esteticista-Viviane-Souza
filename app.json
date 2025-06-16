@@ -1,6 +1,6 @@
 {
   "expo": {
-    "name": "lash-app",
+    "name": "Viviane Lash",
     "slug": "lash-app",
     "version": "1.0.0",
     "orientation": "portrait",
@@ -49,7 +49,7 @@
         "origin": false
       },
       "eas": {
-        "projectId": "71961893-f131-442a-9791-6e19877f00a4"
+        "projectId": "a81739ef-87a6-4829-8dca-b240858f0f5a"
       }
     }
   }

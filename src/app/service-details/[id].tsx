@@ -4,13 +4,12 @@ import { Feather } from "@expo/vector-icons";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import moment from "moment";
+import 'moment/locale/pt-br';  // Importa localização em português
 import { useEffect, useState } from "react";
 import { Image, ScrollView, StyleSheet, Text, ToastAndroid, TouchableOpacity, View } from "react-native";
-import { Calendar, DateData, LocaleConfig } from "react-native-calendars";
-import { ptBR } from "../../utils/localeCalendarConfig";
+import { Calendar, DateData } from "react-native-calendars";
 
-LocaleConfig.locales["pt-br"] = ptBR;
-LocaleConfig.defaultLocale = "pt-br";
+moment.locale('pt-br'); // Define o locale para português
 
 interface Servico {
     id: number;
@@ -22,11 +21,22 @@ interface Servico {
 }
 
 const availability: Record<string, string[]> = {
-    Monday: ["09:00", "10:00", "11:00", "12:00", "13:00", "14:00", "15:00", "16:00", "17:00"],
-    Tuesday: ["09:00", "10:00", "11:00", "12:00", "13:00", "14:00", "15:00", "16:00", "17:00"],
-    Wednesday: ["09:00", "10:00", "11:00", "12:00", "13:00", "14:00", "15:00", "16:00", "17:00"],
-    Thursday: ["09:00", "10:00", "11:00", "12:00", "13:00", "14:00", "15:00", "16:00", "17:00"],
-    Friday: ["09:00", "10:00", "11:00", "12:00", "13:00", "14:00", "15:00", "16:00", "17:00"]
+    'Segunda': ["08:00", "09:00", "10:00", "11:00", "12:00", "13:00", "14:00", "15:00", "16:00", "17:00", "18:00"],
+    'Terça': ["08:00", "09:00", "10:00", "11:00", "12:00", "13:00", "14:00", "15:00", "16:00", "17:00", "18:00"],
+    'Quarta': ["08:00", "09:00", "10:00", "11:00", "12:00", "13:00", "14:00", "15:00", "16:00", "17:00", "18:00"],
+    'Quinta': ["08:00", "09:00", "10:00", "11:00", "12:00", "13:00", "14:00", "15:00", "16:00", "17:00", "18:00"],
+    'Sexta': ["08:00", "09:00", "10:00", "11:00", "12:00", "13:00", "14:00", "15:00", "16:00", "17:00", "18:00"],
+    'Sábado': ["09:00", "10:00", "11:00", "12:00", "13:00", "14:00", "15:00", "16:00", "17:00"]
+};
+
+const dayMap: { [key: number]: string } = {
+    0: 'Domingo',
+    1: 'Segunda',
+    2: 'Terça',
+    3: 'Quarta',
+    4: 'Quinta',
+    5: 'Sexta',
+    6: 'Sábado'
 };
 
 const getAvailableTimes = (day: string | null): string[] => {
@@ -42,14 +52,14 @@ export default function ServiceDetails() {
     const [selectedDate, setSelectedDate] = useState<DateData>();
     const [selectedTime, setSelectedTime] = useState<string | null>(null);
     const [isLoading, setIsLoading] = useState(false);
-    const [userID, setUserID] = useState<string | null>()
+    const [userID, setUserID] = useState<string | null>();
 
     useEffect(() => {
         (async () => {
             const result = await AsyncStorage.getItem('userId')
             if (result) setUserID(result)
         })()
-    }, [])
+    }, []);
 
     const fetchServico = async () => {
         setIsLoading(true);
@@ -71,20 +81,20 @@ export default function ServiceDetails() {
     }, [itemID]);
 
     const handleDayPress = (day: DateData) => {
-        const date = new Date(day.dateString);
-        const dayOfWeek = date.getDay();
+        const date = moment(day.dateString);
+        const dayOfWeek = date.day();
+        const weekDay = dayMap[dayOfWeek];
 
-        if (dayOfWeek === 0 || dayOfWeek === 5) {
-            ToastAndroid.show("Não trabalhamos aos fins de semana", 2000);
+        console.log('Data selecionada:', day.dateString);
+        console.log('Dia da semana (número):', dayOfWeek);
+        console.log('Dia da semana (nome):', weekDay);
+
+        if (dayOfWeek === 0) {
+            ToastAndroid.show("Não trabalhamos aos domingos", 2000);
             return;
         }
 
-        const weekDay = moment(day.dateString).format('dddd');
-        const capitalized = weekDay.charAt(0).toUpperCase() + weekDay.slice(1).split('-')[0];
-
-        console.log('tst', capitalized)
-
-        if (availability[capitalized]) {
+        if (availability[weekDay]) {
             setSelectedDate(day);
             setSelectedTime(null);
         } else {
@@ -95,37 +105,41 @@ export default function ServiceDetails() {
     };
 
     const handleConfirm = async () => {
-        if (selectedDate && selectedTime && servico) {
-            try {
-                const [hours, minutes] = selectedTime.split(':').map(Number);
-                const dataHora = new Date(selectedDate.dateString);
-                dataHora.setHours(hours, minutes, 0, 0);
-
-                const agendamentoData = {
-                    dataHora: dataHora.toISOString(),
-                    clienteId: userID,
-                    servicoId: servico.id,
-                };
-
-                const response = await api.post('/agendamento', agendamentoData);
-                if (response.status === 201) {
-                    ToastAndroid.show("Agendamento realizado com sucesso!", 2000);
-                    router.replace("/loading");
-                }
-            } catch (error) {
-                if (error instanceof Error && 'response' in error) {
-                    console.error('Erro detalhado:', (error.response as any)?.data || error.message);
-                    ToastAndroid.show(
-                        (error.response as any)?.data?.message || "Não foi possível confirmar o agendamento.",
-                        2000
-                    );
-                } else {
-                    console.error('Erro desconhecido:', error);
-                    ToastAndroid.show("Erro desconhecido ao confirmar o agendamento.", 2000);
-                }
-            }
-        } else {
+        if (!selectedDate || !selectedTime || !servico) {
             ToastAndroid.show("Por favor, selecione um dia e um horário.", 2000);
+            return;
+        }
+
+        try {
+            const [hours, minutes] = selectedTime.split(':').map(Number);
+            const dataHora = moment(selectedDate.dateString)
+                .hour(hours)
+                .minute(minutes)
+                .second(0)
+                .millisecond(0);
+
+            const agendamentoData = {
+                dataHora: dataHora.toISOString(),
+                clienteId: userID,
+                servicoId: servico.id,
+            };
+
+            const response = await api.post('/agendamento', agendamentoData);
+            if (response.status === 201) {
+                ToastAndroid.show("Agendamento realizado com sucesso!", 2000);
+                router.replace("/loading");
+            }
+        } catch (error) {
+            if (error instanceof Error && 'response' in error) {
+                console.error('Erro detalhado:', (error.response as any)?.data || error.message);
+                ToastAndroid.show(
+                    (error.response as any)?.data?.message || "Não foi possível confirmar o agendamento.",
+                    2000
+                );
+            } else {
+                console.error('Erro desconhecido:', error);
+                ToastAndroid.show("Erro desconhecido ao confirmar o agendamento.", 2000);
+            }
         }
     };
 
@@ -146,14 +160,11 @@ export default function ServiceDetails() {
     }
 
     const selectedDay = selectedDate ?
-        moment(selectedDate.dateString).format('dddd').charAt(0).toUpperCase() +
-        moment(selectedDate.dateString).format('dddd').slice(1).split('-')[0] :
+        dayMap[moment(selectedDate.dateString).day()] :
         null;
 
     return (
         <ScrollView style={styles.container}>
-
-
             <View style={styles.imageContainer}>
                 {servico.imagem ? (
                     <Image
@@ -205,12 +216,11 @@ export default function ServiceDetails() {
                         selectedDayTextColor: '#fff',
                         arrowColor: colors.purple[100],
                         calendarBackground: '#fff',
-                        textDayStyle: { color: colors.gray[600], },
+                        textDayStyle: { color: colors.gray[600] },
                         textDisabledColor: colors.gray[400],
-
                         textDayHeaderFontSize: 14,
                     }}
-                    minDate={new Date().toDateString()}
+                    minDate={moment().format('YYYY-MM-DD')}
                     hideExtraDays
                     onDayPress={handleDayPress}
                     markedDates={
@@ -237,7 +247,10 @@ export default function ServiceDetails() {
                                     ]}
                                     onPress={() => setSelectedTime(time)}
                                 >
-                                    <Text style={styles.timeText}>{time}</Text>
+                                    <Text style={[
+                                        styles.timeText,
+                                        selectedTime === time && { color: '#fff' }
+                                    ]}>{time}</Text>
                                 </TouchableOpacity>
                             ))}
                         </View>
@@ -275,23 +288,12 @@ const styles = StyleSheet.create({
         alignItems: 'center',
     },
     loadingText: {
-
         fontSize: 16,
         color: colors.gray[600],
     },
     errorText: {
-
         fontSize: 16,
         color: colors.gray[600],
-    },
-    backButton: {
-        position: "absolute",
-        top: 40,
-        left: 20,
-        backgroundColor: colors.purple[100],
-        padding: 8,
-        borderRadius: 20,
-        zIndex: 10,
     },
     imageContainer: {
         height: 250,
@@ -307,7 +309,6 @@ const styles = StyleSheet.create({
         alignItems: 'center',
     },
     noImageText: {
-
         fontSize: 16,
         color: colors.gray[500],
     },
@@ -322,7 +323,6 @@ const styles = StyleSheet.create({
         marginBottom: 10,
     },
     description: {
-
         fontSize: 16,
         color: colors.gray[600],
         marginBottom: 20,
@@ -338,13 +338,11 @@ const styles = StyleSheet.create({
         alignItems: 'center',
     },
     infoLabel: {
-
         fontSize: 16,
         color: colors.gray[600],
         marginRight: 5,
     },
     infoValue: {
-
         fontSize: 16,
         color: colors.purple[100],
     },
@@ -354,7 +352,6 @@ const styles = StyleSheet.create({
         alignItems: 'center'
     },
     sectionTitle: {
-
         fontSize: 18,
         color: colors.purple[100],
         marginBottom: 15,
@@ -381,7 +378,6 @@ const styles = StyleSheet.create({
         transform: [{ scale: 1.05 }],
     },
     timeText: {
-
         fontSize: 16,
         color: '#333',
     },
@@ -394,7 +390,7 @@ const styles = StyleSheet.create({
         marginTop: 20,
     },
     confirmButtonText: {
-
+        fontSize: 18,
         color: "#fff",
     },
     calendar: {

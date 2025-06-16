@@ -23,16 +23,25 @@ export default StyleSheet.create({
     },
     backButton: {
         position: "absolute",
-        top: 40,
+        top: 60,
+        marginTop: 30,
         left: 20,
         backgroundColor: colors.purple[100],
         padding: 8,
-        borderRadius: 20,
+        borderRadius: 10,
         zIndex: 10,
     },
-    map: {
-        width: "90%",
-        height: "50%",
-
+    mapButton: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'center',
+        backgroundColor: colors.purple[100],
+        padding: 15,
+        borderRadius: 8,
+        marginTop: 20,
     },
+    mapIcon: {
+        marginRight: 10,
+    },
+
 });
