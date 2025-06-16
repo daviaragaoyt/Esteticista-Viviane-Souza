@@ -1,13 +1,12 @@
-import { api } from "@/src/services/api";
-import { colors, fontFamily } from "@/src/styles/theme";
-import { useLocalSearchParams, useRouter } from "expo-router";
-import React, { useEffect, useState } from "react";
-import { Image, StyleSheet, Text, TextInput, ToastAndroid, View, Alert } from "react-native";
 import { Button } from '@/src/app/components/button';
 import { TabBar } from "@/src/app/components/tabbar";
-import * as ImagePicker from 'expo-image-picker';
-import * as FileSystem from 'expo-file-system';
+import { api } from "@/src/services/api";
+import { colors, fontFamily } from "@/src/styles/theme";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import * as ImagePicker from 'expo-image-picker';
+import { useLocalSearchParams, useRouter } from "expo-router";
+import React, { useEffect, useState } from "react";
+import { Alert, Image, StyleSheet, Text, TextInput, ToastAndroid, View } from "react-native";
 
 interface Servico {
     id?: number;
@@ -120,7 +119,7 @@ export default function ProviderServiceForm() {
                 preco: parseFloat(preco),
                 duracao: parseInt(duracao),
                 imagem,
-                prestadorId,
+                prestadorId: userID,
             };
 
             const endpoint = isEditMode

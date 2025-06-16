@@ -14,6 +14,7 @@ export default function Login() {
     const [password, setPassword] = useState("");
     const [isLoading, setIsLoading] = useState(false);
     const [showForgotPasswordModal, setShowForgotPasswordModal] = useState(false);
+
     const handleLogin = async () => {
         if (!email || !password) {
             ToastAndroid.show("Preencha todos os campos!", 2000);

@@ -1,13 +1,14 @@
+import { colors } from "@/src/styles/theme";
+import { Feather } from "@expo/vector-icons";
+import { ComponentProps } from "react";
 import {
-    TouchableOpacity,
-    TouchableOpacityProps,
+    ActivityIndicator,
     Text,
     TextProps,
-    ActivityIndicator,
+    TouchableOpacity,
+    TouchableOpacityProps,
 } from "react-native";
 import { s } from "./styles";
-import { colors } from "@/src/styles/theme";
-import { IconProps as TablerIconProps } from "@tabler/icons-react-native";
 
 type ButtonProps = TouchableOpacityProps & {
     isLoading?: boolean;
@@ -34,11 +35,11 @@ function Title({ children }: TextProps) {
 }
 
 type IconProps = {
-    icon: React.ComponentType<TablerIconProps>;
+    name: ComponentProps<typeof Feather>["name"];
 };
 
-function Icon({ icon: Icon }: IconProps) {
-    return <Icon size={24} color={colors.gray[100]} />;
+function Icon({ name }: IconProps) {
+    return <Feather name={name} size={24} color={colors.gray[100]} />;
 }
 
 Button.Title = Title;

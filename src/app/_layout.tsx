@@ -20,16 +20,18 @@ export default function Layout() {
 
   return (
 
-    <Stack >
+    <Stack>
       <StatusBar barStyle={"dark-content"} />
       <Stack.Screen name="index" options={{ headerShown: false }} />
       <Stack.Screen name="home" options={{ headerShown: false }} />
       <Stack.Screen name="cadastro/index" options={{ headerShown: false }} />
       <Stack.Screen name="provider/index" options={{ headerShown: false }} />
       <Stack.Screen name="provider/appointments" options={{ headerShown: false }} />
-      <Stack.Screen name="provider/dashboard" options={{ headerShown: false }} />
-      <Stack.Screen name="provider/new-service" options={{ headerShown: false }} />
+      <Stack.Screen name="provider/dashboard/index" options={{ headerShown: false }} />
+      <Stack.Screen name="provider/new-service/index" options={{ headerShown: false }} />
+      <Stack.Screen name="service-details/[id]" options={{ headerShown: false }} />
+      <Stack.Screen name="agendado/index" options={{ headerShown: false }} />
+      <Stack.Screen name="loading/index" options={{ headerShown: false }} />
     </Stack>
-
   );
 }

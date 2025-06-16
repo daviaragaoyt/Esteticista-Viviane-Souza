@@ -1,14 +1,13 @@
 import { api } from "@/src/services/api";
 import { colors, fontFamily } from "@/src/styles/theme";
-import { IconArrowLeft } from "@tabler/icons-react-native";
-import { useLocalSearchParams, useRouter } from "expo-router";
-import { useEffect, useState } from "react";
-import { Image, StyleSheet, Text, ToastAndroid, TouchableOpacity, View, ScrollView } from "react-native";
-import moment from "moment";
-import { Calendar, DateData, LocaleConfig } from "react-native-calendars";
 import { Feather } from "@expo/vector-icons";
-import { ptBR } from "../../utils/localeCalendarConfig";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { useLocalSearchParams, useRouter } from "expo-router";
+import moment from "moment";
+import { useEffect, useState } from "react";
+import { Image, ScrollView, StyleSheet, Text, ToastAndroid, TouchableOpacity, View } from "react-native";
+import { Calendar, DateData, LocaleConfig } from "react-native-calendars";
+import { ptBR } from "../../utils/localeCalendarConfig";
 
 LocaleConfig.locales["pt-br"] = ptBR;
 LocaleConfig.defaultLocale = "pt-br";
@@ -154,7 +153,7 @@ export default function ServiceDetails() {
     return (
         <ScrollView style={styles.container}>
             <TouchableOpacity style={styles.backButton} onPress={() => router.back()}>
-                <IconArrowLeft color={colors.gray[100]} size={24} />
+                <Feather name="arrow-left" color={colors.gray[100]} size={24} />
             </TouchableOpacity>
 
             <View style={styles.imageContainer}>
@@ -212,7 +211,6 @@ export default function ServiceDetails() {
                         textDisabledColor: colors.gray[400],
                         textDayHeaderFontFamily: fontFamily.medium,
                         textDayHeaderFontSize: 14,
-                        textDayHeaderColor: colors.purple[100],
                     }}
                     minDate={new Date().toDateString()}
                     hideExtraDays

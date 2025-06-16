@@ -1,11 +1,11 @@
-import { useSegments, useRouter } from "expo-router";
-import { View, Text, TouchableOpacity, Animated } from "react-native";
-import { useEffect, useRef } from "react";
 import { colors } from "@/src/styles/colors";
 import { FontAwesome } from "@expo/vector-icons"; // Biblioteca de ícones
+import { useRouter, useSegments } from "expo-router";
+import { useEffect, useRef } from "react";
+import { Animated, Text, TouchableOpacity, View } from "react-native";
 
 const tabs = [
-    { name: "Agendamentos", route: "/provider/appointments", icon: "calendar" },
+    { name: "Agendamentos", route: "/provider", icon: "calendar" },
     { name: "Serviços", route: "/provider/dashboard", icon: "scissors" },
 ];
 
