@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { View, Text, Modal, TouchableWithoutFeedback } from "react-native";
 import { Button } from "../components/button";
-import MapView, { Marker } from "react-native-maps";
+// import MapView, { Marker } from "react-native-maps";
 import styles from "./styles";
 
 const ServicoAgendado = () => {
@@ -21,7 +21,7 @@ const ServicoAgendado = () => {
             <Modal visible={modalVisible} animationType="slide" transparent={true}>
                 <TouchableWithoutFeedback onPress={() => setModalVisible(false)}>
                     <View style={styles.modalContainer}>
-                        <MapView
+                        {/* <MapView
                             style={styles.map}
                             initialRegion={{
                                 latitude,
@@ -32,7 +32,7 @@ const ServicoAgendado = () => {
                             onPress={() => setModalVisible(false)} // Fecha ao tocar no mapa também
                         >
                             <Marker coordinate={{ latitude, longitude }} title="Local de Atendimento" />
-                        </MapView>
+                        </MapView> */}
                     </View>
                 </TouchableWithoutFeedback>
             </Modal>
